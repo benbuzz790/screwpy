@@ -1,6 +1,5 @@
 from units_config import ureg
 import re
-
 # Test the current pattern vs what we want
 CURRENT_PATTERN = r'^(\d+/\d+|\d+\.?\d*)[-](\d+)(?:\s+(UNC|UNF))?$'
 PROPOSED_PATTERN = r'^(\d+/\d+|\d+\.?\d*)[-](\d+)\s+(UNC|UNF)$'

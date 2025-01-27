@@ -82,13 +82,6 @@ class Junction:
         if self.clamped_components:
             return total.to(self.clamped_components[0].thickness.units)
         return total
-        for component in self.clamped_components:
-            total += component.thickness
-        if isinstance(self.threaded_member, Nut):
-            total += self.threaded_member.height
-        elif isinstance(self.threaded_member, ThreadedPlate):
-            total += self.threaded_member.thickness
-        return total
 
     @property
     def grip_length(self) ->Quantity:
@@ -107,9 +100,6 @@ class Junction:
         # Return in the same units as the first component for consistency
         if self.clamped_components:
             return total.to(self.clamped_components[0].thickness.units)
-        return total
-        for component in self.clamped_components:
-            total += component.thickness
         return total
 
     def add_clamped_component(self, component: ClampedComponent) ->None:
