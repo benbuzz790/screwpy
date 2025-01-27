@@ -1,0 +1,130 @@
+# Requirements for standard_materials.py
+
+## Purpose
+Implement concrete material classes for GenericSteel and GenericAluminum with standard material properties.
+
+## Top-Level Requirements Flow-Down
+
+### From Unit Handling Requirements
+1. All material properties must use pint units
+2. Must support both imperial and metric units
+3. Must be unit-agnostic in implementation
+4. Must provide standard material properties with proper units
+
+### From Code Structure Requirements
+1. Must use type hints
+2. Must include comprehensive docstrings
+3. Must be Python 3.x compatible
+4. Must maintain separation between data and analysis logic
+
+### From Core Functionality Requirements
+1. Must implement two concrete material classes:
+   - GenericSteel
+   - GenericAluminum
+2. Must provide standard material properties
+3. Must inherit from Material base class
+
+## Specific Requirements
+
+### Common Implementation Requirements
+1. Both classes must:
+   - Inherit from Material base class
+   - Implement all abstract methods
+   - Provide all required properties with units
+   - Include proper validation
+   - Support unit conversion
+
+### GenericSteel Class
+1. Required Properties (with standard steel values):
+   - Yield strength (~250 MPa / 36 ksi)
+   - Ultimate strength (~400 MPa / 58 ksi)
+   - Density (~7850 kg/m³ / 0.284 lb/in³)
+   - Poisson's ratio (~0.29)
+   - Modulus of elasticity (~200 GPa / 29000 ksi)
+   - Coefficient of thermal expansion (~11.7e-6 /K)
+
+2. Implementation Requirements:
+   - Properties must be initialized with default values
+   - Must support property modification
+   - Must maintain property constraints
+   - Must include proper documentation of standard values
+
+### GenericAluminum Class
+1. Required Properties (with standard aluminum values):
+   - Yield strength (~276 MPa / 40 ksi)
+   - Ultimate strength (~310 MPa / 45 ksi)
+   - Density (~2700 kg/m³ / 0.098 lb/in³)
+   - Poisson's ratio (~0.33)
+   - Modulus of elasticity (~69 GPa / 10000 ksi)
+   - Coefficient of thermal expansion (~23.1e-6 /K)
+
+2. Implementation Requirements:
+   - Properties must be initialized with default values
+   - Must support property modification
+   - Must maintain property constraints
+   - Must include proper documentation of standard values
+
+### Property Management
+1. Each property must:
+   - Have appropriate units
+   - Be initialized with standard values
+   - Support unit conversion
+   - Maintain material-specific constraints
+   - Include validation
+
+### Type Hints
+1. Must use proper type hints for:
+   - All method parameters
+   - All return values
+   - All property definitions
+2. Must properly type hint pint quantities
+
+### Documentation
+1. Must include docstrings for:
+   - The module
+   - Each class
+   - Each method
+   - Each property
+2. Must include usage examples in docstrings
+3. Must document:
+   - Standard property values
+   - Units for each property
+   - Valid ranges
+   - Sources for standard values
+
+### Testing Requirements
+1. Must have 100% test coverage
+2. No mocking allowed in tests
+3. Must test:
+   - Material creation
+   - Default property values
+   - Property access and modification
+   - Unit conversions
+   - Validation logic
+   - Error conditions
+4. Must test with:
+   - Both imperial and metric units
+   - Property modifications
+   - Edge case values
+   - Invalid values
+
+### Error Handling
+1. Must raise appropriate exceptions for:
+   - Invalid property values
+   - Unit conversion errors
+   - Validation failures
+   - Property constraint violations
+
+### Dependencies
+1. Required imports:
+   - pint (for unit handling)
+   - typing (for type hints)
+2. Internal dependencies:
+   - units_config (for unit registry)
+   - materials.material (for Material base class)
+
+### Implementation Notes
+1. Must provide clear documentation of standard value sources
+2. Must implement proper property validation
+3. Must maintain material-specific constraints
+4. Must support both creation with defaults and property modification

@@ -1,0 +1,101 @@
+# Requirements for clamped_components.py
+
+## Purpose
+Implement concrete classes for clamped components (Washer and PlateComponent) in fastener assemblies.
+
+## Top-Level Requirements Flow-Down
+
+### From Unit Handling Requirements
+1. All dimensional values must use pint units
+2. Must support both imperial and metric units
+3. Must be unit-agnostic in implementation
+
+### From Code Structure Requirements
+1. Must use type hints
+2. Must include comprehensive docstrings
+3. Must be Python 3.x compatible
+4. Must maintain separation between data and analysis logic
+
+### From Core Functionality Requirements
+1. Must implement ClampedComponent subclasses:
+   - Washer
+   - PlateComponent
+2. Must integrate with material system
+3. Must support basic geometric validation
+
+## Specific Requirements
+
+### Class Hierarchy
+1. Must inherit from BaseComponent
+2. Must implement all abstract methods from parent
+
+### Washer Class
+1. Required properties with units:
+   - Inner diameter (length units)
+   - Outer diameter (length units)
+   - Thickness (length units)
+   - Material reference
+2. Validation requirements:
+   - Outer diameter must be greater than inner diameter
+   - All dimensions must be positive
+   - Must have valid material reference
+
+### PlateComponent Class
+1. Required properties with units:
+   - Thickness (length units)
+   - Material reference
+2. Validation requirements:
+   - Thickness must be positive
+   - Must have valid material reference
+
+### Common Requirements
+1. Property access methods:
+   - Getters and setters for all dimensional properties
+   - Material property access
+2. Unit conversion support:
+   - Convert between metric and imperial
+   - Maintain unit consistency
+
+### Type Hints
+1. Must use proper type hints for:
+   - All method parameters
+   - All return values
+   - All property definitions
+2. Must properly type hint pint quantities
+
+### Documentation
+1. Must include docstrings for:
+   - The module
+   - Each class
+   - Each method
+   - Each property
+2. Must include usage examples in docstrings
+3. Must include unit specification in property documentation
+
+### Testing Requirements
+1. Must have 100% test coverage
+2. No mocking allowed in tests
+3. Must test:
+   - Component creation
+   - Property access and modification
+   - Unit conversions
+   - Validation logic
+   - Error conditions
+4. Must include examples with both imperial and metric units
+5. Must test integration with material system
+
+### Error Handling
+1. Must raise appropriate exceptions for:
+   - Invalid dimensions
+   - Invalid material assignments
+   - Unit conversion errors
+   - Validation failures
+
+### Dependencies
+1. Required imports:
+   - pint (for unit handling)
+   - typing (for type hints)
+2. Internal dependencies:
+   - units_config (for unit registry)
+   - materials.material (for material type hints)
+   - components.base_component (for base class)

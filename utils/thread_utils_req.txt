@@ -1,0 +1,140 @@
+# Requirements for thread_utils.py
+
+## Purpose
+Provide utilities for thread specification parsing, validation, and calculations.
+
+## Top-Level Requirements Flow-Down
+
+### From Unit Handling Requirements
+1. All dimensional calculations must use pint units
+2. Must support both imperial and metric units
+3. Must be unit-agnostic in implementation
+4. Must handle thread specifications as strings with integer pitch diameters
+
+### From Code Structure Requirements
+1. Must use type hints
+2. Must include comprehensive docstrings
+3. Must be Python 3.x compatible
+4. Must maintain separation between data and analysis logic
+
+### From Core Functionality Requirements
+1. Must provide thread specification parsing
+2. Must support standard thread series
+3. Must calculate thread dimensions
+
+## Specific Requirements
+
+### Thread Specification Parsing
+1. Must parse standard thread specifications:
+   - UNC (Unified National Coarse)
+   - UNF (Unified National Fine)
+   - Format examples: "1/4-20 UNC", "3/8-16 UNC", "1/4-28 UNF"
+2. Must extract from specification string:
+   - Nominal diameter
+   - Threads per inch
+   - Thread series
+3. Must validate specification format
+
+### Thread Calculations
+1. Must calculate with proper units:
+   - Pitch diameter
+   - Minor diameter
+   - Major diameter
+   - Thread pitch
+2. Must support standard thread series calculations:
+   - UNC series dimensions
+   - UNF series dimensions
+3. Must handle both fractional and decimal inputs
+
+### Thread Validation
+1. Must validate:
+   - Thread specification format
+   - Thread series compatibility
+   - Dimensional consistency
+   - Unit compatibility
+2. Must provide thread matching validation between components
+
+### Required Functions
+1. Thread Parsing:
+   - parse_thread_specification(spec: str) -> ThreadInfo
+   - validate_thread_format(spec: str) -> bool
+   - extract_thread_dimensions(spec: str) -> Dict[str, Quantity]
+
+2. Thread Calculations:
+   - calculate_pitch_diameter(spec: str) -> Quantity
+   - calculate_minor_diameter(spec: str) -> Quantity
+   - calculate_thread_pitch(spec: str) -> Quantity
+
+3. Thread Validation:
+   - is_valid_thread_spec(spec: str) -> bool
+   - are_threads_compatible(spec1: str, spec2: str) -> bool
+   - validate_thread_series(spec: str) -> bool
+
+### Type Hints
+1. Must use proper type hints for:
+   - All function parameters
+   - All return values
+   - Custom types (ThreadInfo, etc.)
+2. Must properly type hint:
+   - Pint quantities
+   - Thread specifications
+   - Return types
+
+### Documentation
+1. Must include docstrings for:
+   - The module
+   - Each function
+   - Each custom type
+   - Constants and lookup tables
+2. Must include usage examples in docstrings
+3. Must document:
+   - Supported thread series
+   - Thread specification format
+   - Unit handling
+   - Calculation methods
+
+### Testing Requirements
+1. Must have 100% test coverage
+2. No mocking allowed in tests
+3. Must test:
+   - Thread specification parsing
+   - Dimension calculations
+   - Validation functions
+   - Error conditions
+4. Must test with:
+   - Various thread specifications
+   - Both imperial and metric units
+   - Invalid specifications
+   - Edge cases
+   - Different thread series
+
+### Error Handling
+1. Must raise appropriate exceptions for:
+   - Invalid thread specifications
+   - Unsupported thread series
+   - Unit conversion errors
+   - Calculation errors
+   - Validation failures
+
+### Constants and Data
+1. Must maintain thread series data:
+   - Standard UNC specifications
+   - Standard UNF specifications
+   - Thread formulas
+   - Conversion factors
+
+### Dependencies
+1. Required imports:
+   - pint (for unit handling)
+   - typing (for type hints)
+   - re (for string parsing)
+2. Internal dependencies:
+   - units_config (for unit registry)
+
+### Implementation Notes
+1. Must use regular expressions for parsing
+2. Must maintain clear separation of concerns
+3. Must provide reusable utilities
+4. Must support future thread series additions
+5. Must handle common thread specification formats
+6. Must provide clear error messages

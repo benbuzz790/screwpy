@@ -1,0 +1,135 @@
+# Requirements for unit_utils.py
+
+## Purpose
+Provide utility functions for common unit operations and conversions across the system.
+
+## Top-Level Requirements Flow-Down
+
+### From Unit Handling Requirements
+1. Must support pint unit operations
+2. Must support both imperial and metric units
+3. Must be unit-agnostic in implementation
+4. Must provide consistent unit conversion utilities
+5. Must prefer imperial units while supporting metric
+
+### From Code Structure Requirements
+1. Must use type hints
+2. Must include comprehensive docstrings
+3. Must be Python 3.x compatible
+4. Must provide clean interface for other modules
+
+## Specific Requirements
+
+### Unit Conversion Utilities
+1. Must provide functions for common conversions:
+   - Length conversions (inch <-> mm, m)
+   - Force conversions (lbf <-> N)
+   - Stress conversions (psi <-> MPa)
+   - Temperature conversions (°F <-> °C, K)
+   - Density conversions (lb/in³ <-> kg/m³)
+   - Thermal expansion conversions (1/°F <-> 1/K)
+
+2. Must provide standardization functions:
+   - Convert to standard imperial units
+   - Convert to standard metric units
+   - Handle dimensionless quantities
+
+### Unit Validation Utilities
+1. Must provide functions to:
+   - Validate unit types
+   - Check unit compatibility
+   - Verify unit dimensions
+   - Ensure proper unit bases
+
+### Common Operations
+1. Must provide utility functions for:
+   - Unit addition with validation
+   - Unit multiplication with validation
+   - Unit division with validation
+   - Unit comparison with tolerance
+   - Unit rounding
+   - Unit formatting
+
+### Type Hints
+1. Must use proper type hints for:
+   - All function parameters
+   - All return values
+   - Pint quantity types
+2. Must properly type hint:
+   - Optional parameters
+   - Unit registry types
+   - Return types
+
+### Documentation
+1. Must include docstrings for:
+   - The module
+   - Each function
+   - Each utility
+   - Constants and defaults
+2. Must include usage examples in docstrings
+3. Must document:
+   - Common conversion patterns
+   - Unit compatibility rules
+   - Best practices
+   - Error handling
+
+### Testing Requirements
+1. Must have 100% test coverage
+2. No mocking allowed in tests
+3. Must test:
+   - All conversion functions
+   - Validation utilities
+   - Common operations
+   - Error conditions
+4. Must test with:
+   - Both imperial and metric units
+   - Edge cases
+   - Invalid conversions
+   - Different unit types
+   - Dimensionless quantities
+
+### Error Handling
+1. Must raise appropriate exceptions for:
+   - Invalid unit types
+   - Incompatible units
+   - Conversion errors
+   - Validation failures
+   - Mathematical errors
+
+### Required Functions
+1. Conversion Functions:
+   - to_imperial(quantity: Quantity) -> Quantity
+   - to_metric(quantity: Quantity) -> Quantity
+   - standardize_units(quantity: Quantity, preferred: str) -> Quantity
+
+2. Validation Functions:
+   - is_valid_unit_type(quantity: Quantity, expected_type: str) -> bool
+   - are_units_compatible(q1: Quantity, q2: Quantity) -> bool
+   - validate_unit_dimension(quantity: Quantity, dimension: str) -> bool
+
+3. Operation Functions:
+   - safe_add(q1: Quantity, q2: Quantity) -> Quantity
+   - safe_multiply(q1: Quantity, q2: Quantity) -> Quantity
+   - safe_divide(q1: Quantity, q2: Quantity) -> Quantity
+   - compare_with_tolerance(q1: Quantity, q2: Quantity, tolerance: float) -> bool
+
+4. Formatting Functions:
+   - format_quantity(quantity: Quantity, precision: int) -> str
+   - format_with_units(quantity: Quantity) -> str
+
+### Dependencies
+1. Required imports:
+   - pint (for unit handling)
+   - typing (for type hints)
+   - math (for calculations)
+2. Internal dependencies:
+   - units_config (for unit registry)
+
+### Implementation Notes
+1. Must be implemented as pure functions
+2. Must not maintain state
+3. Must be thread-safe
+4. Must provide clear error messages
+5. Must handle edge cases gracefully
+6. Must support future unit additions
+7. Must maintain consistent behavior across the system

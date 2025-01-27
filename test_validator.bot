@@ -1,0 +1,157 @@
+{
+ "name": "test_validator",
+ "model_engine": "claude-3-5-sonnet-20241022",
+ "max_tokens": 4096,
+ "temperature": 0.3,
+ "role": "assistant",
+ "role_description": "a friendly AI assistant",
+ "conversation": {
+  "content": "",
+  "node_class": "AnthropicNode",
+  "pending_results": [],
+  "role": "empty",
+  "tool_calls": [],
+  "tool_results": [],
+  "replies": [
+   {
+    "content": "MESSAGE:\n\nPlease use pytest to run all tests in the project and debug any errors. Report back with:\n1. Test execution results\n2. Any errors found\n3. Debugging steps taken\n4. Confirmation when all tests pass\n\nFocus on:\n- No mocking in tests\n- Unit tests for all components\n- Integration tests for component interactions\n- Both imperial and metric unit tests\n- Error condition tests\n- Edge case tests\n\nStart with running pytest and report back.",
+    "pending_results": [],
+    "role": "user",
+    "tool_calls": [],
+    "tool_results": [],
+    "node_class": "AnthropicNode",
+    "replies": [
+     {
+      "content": "I apologize, but as a requirements checking bot, I am not able to run tests directly. My role is specifically to:\n\n1. Read requirements files (*_req.txt) and verify if their associated Python files meet those requirements\n2. Communicate with file bots about requirement violations\n3. Verify fixes meet requirements\n\nFor running and debugging tests, you would need to:\n\n1. Use a test runner/debugger bot if one exists in the system\n2. Or use a development environment or command line to run pytest directly\n\nI can help verify that test files meet their requirements specifications, but I cannot execute the tests themselves. Would you like me to:\n\n1. Check if there are any test requirement files I can validate?\n2. Verify test files against their requirements?\n\nPlease let me know how you'd like to proceed within my capabilities as a requirements checker.",
+      "data": {},
+      "pending_results": [],
+      "role": "assistant",
+      "tool_calls": [],
+      "tool_results": [],
+      "node_class": "AnthropicNode",
+      "replies": [
+       {
+        "content": "Reply with command \"/DONE\" when MESSAGE has been addressed",
+        "pending_results": [],
+        "role": "user",
+        "tool_calls": [],
+        "tool_results": [],
+        "node_class": "AnthropicNode",
+        "replies": [
+         {
+          "content": "Since I have fully explained that I cannot run tests and provided alternative suggestions within my role as a requirements checker, I will mark this message as complete.\n\n/DONE",
+          "data": {},
+          "pending_results": [],
+          "role": "assistant",
+          "tool_calls": [],
+          "tool_results": [],
+          "node_class": "AnthropicNode"
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ },
+ "system_message": "\nYou are part of a hierarchical system of specialized AI assistants \nworking together to create an industry-ready Python project. \nThe system has multiple bot types:\n1. Root: Handles project architecture and module design. Oversees multiple files.\n2. File: Handles specific file implementation and testing. \n3. Validator: Verifies that file implementations meet requirements\n\nYou are all responsible for keeping things simple (KISS) and minimal (YAGNI)\nto the extent that requirements allow.\n\nYou are a requirements checking bot responsible for:\n1. Verifying python files meet their associated requirements\n2. Communicating deviations from requirements with the associated file bot.\n3. Ensuring requirements are met after the file bot makes changes.\n\nNEVER RUN TESTS. Just examine files and requirements files.\nYou may need to clarify filenames - use view_dir if you can't find a file.\n\n1. Read a *_req.txt file and the associated *.py file\n2. If all requirements are not met, use message_bot on *.bot to let them know.\nThey will make changes and then reply, at which point you can check the file\nagain.\n3. If all requirements are met, go on to the next file.\n",
+ "tool_handler": {
+  "class": "bots.foundation.anthropic_bots.AnthropicToolHandler",
+  "tools": [
+   {
+    "name": "diff_edit",
+    "description": "Diff spec editing with flexible matching.\n\nUse when you need to make specific changes in text files.\n\nParameters:\n- file_path (str): Path to the file to modify\n- diff_spec (str): Diff-style specification of changes\n\nReturns:\nstr: Description of changes made/to be made or error message with context\n\nThe diff spec uses a simplified format:\n- Lines starting with '-' indicate text to be removed (no space after -)\n- Lines starting with '+' indicate text to be added (no space after +)\n- Blank lines separate different changes\n- Changes are applied in order:\n    - Text to be removed is matched\n    - Start of text is indexed\n    - Lines are removed\n    - Lines to add are inserted at index (If no lines were removed, index is set to EOF)\n\nDiff Spec Example: replace multiple sets of multiple lines:\n-def bad_function():\n-    return x+y\n+def good_function(x, y):\n+    return x+y\n\n-def print_nice():\n-    print('---')\n-    print(string)\n-    print('---')\n+def print_nice(string):\n+    sep = '---\\n'\n+    print(sep+string+sep)",
+    "input_schema": {
+     "type": "object",
+     "properties": {
+      "file_path": {
+       "type": "string"
+      },
+      "diff_spec": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "file_path",
+      "diff_spec"
+     ]
+    }
+   },
+   {
+    "name": "view",
+    "description": "Display the contents of a file with line numbers.\n\nParameters:\n- file_path (str): The path to the file to be viewed.\n\nReturns:\nA string containing the file contents with line numbers.",
+    "input_schema": {
+     "type": "object",
+     "properties": {
+      "file_path": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "file_path"
+     ]
+    }
+   },
+   {
+    "name": "view_dir",
+    "description": "Creates a summary of the directory structure starting from the given path, writing only files \nwith specified extensions. The output is written to a text file and returned as a string.\n\nParameters:\n- start_path (str): The root directory to start scanning from.\n- output_file (str): The name of the file to optionally write the directory structure to.\n- target_extensions (str): String representation of a list of file extensions (e.g. \"['py', 'txt']\").\n\nReturns:\nstr: A formatted string containing the directory structure, with each directory and file properly indented.\n\nExample output:\nmy_project/\n    module1/\n        script.py\n        README.md\n    module2/\n        utils.py",
+    "input_schema": {
+     "type": "object",
+     "properties": {
+      "start_path": {
+       "type": "string"
+      },
+      "output_file": {
+       "type": "string"
+      },
+      "target_extensions": {
+       "type": "string"
+      }
+     },
+     "required": []
+    }
+   },
+   {
+    "name": "message_bot",
+    "description": "Loads a bot, sends it a message, and allows it to work.\n\nUse to prepare a bot to do a task and to allow it to work. Returns control when the\nbot replies with '/DONE'.\n\nParameters:\n- bot_path (str): File path to the saved bot\n- message (str): The message to send to the bot\n\nReturns the bot's first response, a list of tool-uses in order, and final response as a string.",
+    "input_schema": {
+     "type": "object",
+     "properties": {
+      "bot_path": {
+       "type": "string"
+      },
+      "message": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "bot_path",
+      "message"
+     ]
+    },
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "requests": [],
+  "results": [],
+  "modules": {
+   "C:\\Users\\benbu\\Code\\llm-utilities-git\\bots\\bots\\tools\\code_tools.py": {
+    "name": "bots.tools.code_tools",
+    "source": "import os\nimport traceback\n\n\ndef view(file_path: str):\n    \"\"\"\n    Display the contents of a file with line numbers.\n\n    Parameters:\n    - file_path (str): The path to the file to be viewed.\n\n    Returns:\n    A string containing the file contents with line numbers.\n    \"\"\"\n    encodings = ['utf-8', 'utf-16', 'utf-16le', 'ascii', 'cp1252', 'iso-8859-1'\n        ]\n    for encoding in encodings:\n        try:\n            with open(file_path, 'r', encoding=encoding) as file:\n                lines = file.readlines()\n            numbered_lines = [f'{i + 1}:{line.rstrip()}' for i, line in\n                enumerate(lines)]\n            return '\\n'.join(numbered_lines)\n        except UnicodeDecodeError:\n            continue\n        except Exception as e:\n            return f'Error: {str(e)}'\n    return (\n        f\"Error: Unable to read file with any of the attempted encodings: {', '.join(encodings)}\"\n        )\n\n\ndef view_dir(start_path: str='.', output_file=None, target_extensions: str=\n    \"['py']\"):\n    \"\"\"\n    Creates a summary of the directory structure starting from the given path, writing only files \n    with specified extensions. The output is written to a text file and returned as a string.\n\n    Parameters:\n    - start_path (str): The root directory to start scanning from.\n    - output_file (str): The name of the file to optionally write the directory structure to.\n    - target_extensions (str): String representation of a list of file extensions (e.g. \"['py', 'txt']\").\n\n    Returns:\n    str: A formatted string containing the directory structure, with each directory and file properly indented.\n\n    Example output:\n    my_project/\n        module1/\n            script.py\n            README.md\n        module2/\n            utils.py\n    \"\"\"\n    extensions_list = [ext.strip().strip('\\'\"') for ext in\n        target_extensions.strip('[]').split(',')]\n    extensions_list = [('.' + ext if not ext.startswith('.') else ext) for\n        ext in extensions_list]\n    output_text = []\n    for root, dirs, files in os.walk(start_path):\n        has_py = False\n        for _, _, fs in os.walk(root):\n            if any(f.endswith(tuple(extensions_list)) for f in fs):\n                has_py = True\n                break\n        if has_py:\n            level = root.replace(start_path, '').count(os.sep)\n            indent = '    ' * level\n            line = f'{indent}{os.path.basename(root)}/'\n            output_text.append(line)\n            subindent = '    ' * (level + 1)\n            for file in files:\n                if file.endswith(tuple(extensions_list)):\n                    line = f'{subindent}{file}'\n                    output_text.append(line)\n    if output_file is not None:\n        with open(output_file, 'w') as file:\n            file.write(output_text)\n    return '\\n'.join(output_text)\n\n\ndef diff_edit(file_path: str, diff_spec: str):\n    \"\"\"Diff spec editing with flexible matching.\n\n    Use when you need to make specific changes in text files.\n\n    Parameters:\n    - file_path (str): Path to the file to modify\n    - diff_spec (str): Diff-style specification of changes\n\n    Returns:\n    str: Description of changes made/to be made or error message with context\n\n    The diff spec uses a simplified format:\n    - Lines starting with '-' indicate text to be removed (no space after -)\n    - Lines starting with '+' indicate text to be added (no space after +)\n    - Blank lines separate different changes\n    - Changes are applied in order:\n        - Text to be removed is matched\n        - Start of text is indexed\n        - Lines are removed\n        - Lines to add are inserted at index (If no lines were removed, index is set to EOF)\n\n    Diff Spec Example: replace multiple sets of multiple lines:\n    -def bad_function():\n    -    return x+y\n    +def good_function(x, y):\n    +    return x+y\n\n    -def print_nice():\n    -    print('---')\n    -    print(string)\n    -    print('---')\n    +def print_nice(string):\n    +    sep = '---\\\\n'\n    +    print(sep+string+sep)\n    \"\"\"\n    ignore_indentation: bool = True\n    context_lines: int = 2\n    try:\n        encodings = ['utf-8', 'utf-16', 'utf-16le', 'ascii', 'cp1252',\n            'iso-8859-1']\n        content = None\n        used_encoding = 'utf-8'\n        if not os.path.exists(file_path):\n            with open(file_path, 'w', encoding=used_encoding) as file:\n                file.write('')\n            content = ''\n        else:\n            for encoding in encodings:\n                try:\n                    with open(file_path, 'r', encoding=encoding) as file:\n                        content = file.read()\n                        used_encoding = encoding\n                        break\n                except UnicodeDecodeError:\n                    continue\n        if content is None:\n            return (\n                f\"Error: Unable to read file with any of the attempted encodings: {', '.join(encodings)}\"\n                )\n        if not diff_spec.strip():\n            return 'Error: No changes specified'\n        changes, errors = _parse_diff_spec(diff_spec=diff_spec)\n        if errors:\n            return 'Error parsing:' + '\\n'.join(errors)\n        original_lines = content.splitlines()\n        current_lines = original_lines.copy()\n        matched_changes = []\n        unmatched_changes = []\n        for remove, add in changes:\n            match_found, line_num, prev_indent, match_score, best_index = (\n                _find_matching_block(current_lines, remove, ignore_indentation)\n                )\n            if match_found:\n                indented_add = _adjust_indentation(add, prev_indent)\n                current_lines[line_num:line_num + len(remove)] = indented_add\n                matched_changes.append(('\\n'.join(remove), '\\n'.join(\n                    indented_add)))\n            else:\n                failure_context = ''\n                if match_score > 0:\n                    context = _get_context(current_lines, best_index,\n                        context_lines)\n                    failure_context = '\\nNearest partial match found around:\\n' + '\\n'.join(context) + f\"\"\"\nMatch score: {match_score:.2f}\"\"\"\n                    if ignore_indentation:\n                        failure_context += (\n                            '\\n(Note: matching with ignore_indentation=True)')\n                unmatched_changes.append(('\\n'.join(remove), '\\n'.join(add),\n                    failure_context))\n        if matched_changes:\n            new_content = '\\n'.join(current_lines)\n            if not new_content.endswith('\\n'):\n                new_content += '\\n'\n            with open(file_path, 'w', encoding=used_encoding) as file:\n                file.write(new_content)\n        report = []\n        report.append('Changes made:')\n        if matched_changes:\n            report.append(\n                f'\\nSuccessfully applied {len(matched_changes)} changes:')\n            for old, new in matched_changes:\n                report.append(f'\\nChanged:\\n{old}\\nTo:\\n{new}')\n        if unmatched_changes:\n            report.append(\n                f'\\nFailed to apply {len(unmatched_changes)} changes:')\n            for old, new, context in unmatched_changes:\n                report.append(f'\\nCould not find:\\n{old}')\n        return '\\n'.join(report) if report else 'No changes were applied'\n    except Exception as e:\n        return f'Error: {str(e)}\\n{traceback.format_exc()}'\n\n\ndef _parse_diff_spec(diff_spec: str):\n    changes = []\n    remove = []\n    add = []\n    errors = []\n    last_prefix = None\n    for line in diff_spec.splitlines():\n        if not line:\n            if add:\n                changes.append((remove.copy(), add.copy()))\n                remove.clear()\n                add.clear()\n                last_prefix = None\n            continue\n        if line.startswith('-'):\n            last_prefix = '-'\n            content = line[1:]\n        elif line.startswith('+'):\n            last_prefix = '+'\n            content = line[1:]\n        elif last_prefix is not None:\n            content = line\n        else:\n            errors.append(\n                f'Error: First line in a change block \"{line}\" does not start with + or -.'\n                )\n            continue\n        if last_prefix == '-':\n            remove.append(content)\n        elif last_prefix == '+':\n            add.append(content)\n    if remove or add:\n        changes.append((remove, add))\n    if not changes and not errors:\n        errors.append('Error: No valid changes found in diff spec')\n    return changes, errors\n\n\ndef _find_matching_block(current_lines, remove_lines, ignore_indentation):\n    \"\"\"Find where a block of lines matches in the current file content.\n\n    Args:\n        current_lines: List of strings representing current file content\n        remove_lines: List of strings to find in the file\n        ignore_indentation: Whether to ignore leading whitespace when matching\n\n    Returns:\n        tuple (match_found: bool, line_num: int, indent: str, match_score: float, best_index: int)\n        where:\n        - match_found indicates if an exact match was found\n        - line_num is the line where the match starts (or best partial match)\n        - indent is the indentation to preserve\n        - match_score indicates quality of best partial match (0-1)\n        - best_index is the line number of best partial match\n    \"\"\"\n    if not remove_lines:\n        return True, len(current_lines), '', 1.0, len(current_lines)\n    for i in range(len(current_lines) - len(remove_lines) + 1):\n        current_block = current_lines[i:i + len(remove_lines)]\n        if ignore_indentation:\n            match = all(c.strip() == o.strip() for c, o in zip(\n                current_block, remove_lines))\n        else:\n            match = all(c == o for c, o in zip(current_block, remove_lines))\n        if match:\n            return True, i, _get_indentation(current_lines[i]), 1.0, i\n    best_match_score = 0\n    best_match_index = 0\n    for i in range(len(current_lines) - len(remove_lines) + 1):\n        current_block = current_lines[i:i + len(remove_lines)]\n        match_score = _calculate_block_match_score(current_block,\n            remove_lines, ignore_indentation)\n        if match_score > best_match_score:\n            best_match_score = match_score\n            best_match_index = i\n    return False, best_match_index, _get_indentation(current_lines[\n        best_match_index]), best_match_score, best_match_index\n\n\ndef _get_indentation(line):\n    \"\"\"Extract the leading whitespace from a line.\"\"\"\n    return line[:len(line) - len(line.lstrip())]\n\n\ndef _adjust_indentation(lines, target_indent):\n    \"\"\"Adjust indentation of a block of lines to match target_indent.\"\"\"\n    if not lines:\n        return lines\n    non_empty_lines = [l for l in lines if l.strip()]\n    if not non_empty_lines:\n        return lines\n    min_indent = min(len(_get_indentation(l)) for l in non_empty_lines)\n    adjusted = []\n    for line in lines:\n        if not line.strip():\n            adjusted.append(line)\n        else:\n            stripped = line[min_indent:]\n            adjusted.append(target_indent + stripped)\n    return adjusted\n\n\ndef _get_context(lines, center_idx, context_size):\n    \"\"\"Get context lines around an index with line numbers.\"\"\"\n    start = max(0, center_idx - context_size)\n    end = min(len(lines), center_idx + context_size + 1)\n    return [f'{i + 1}: {line}' for i, line in enumerate(lines[start:end],\n        start)]\n\n\ndef _calculate_block_match_score(current_block, old_lines, ignore_indentation):\n    \"\"\"Calculate how well two blocks match, returning a score and matching line indices.\"\"\"\n    if ignore_indentation:\n        current_joined = ' '.join(l.strip() for l in current_block)\n        old_joined = ' '.join(l.strip() for l in old_lines)\n        current_stripped = [c.strip() for c in current_block]\n        old_stripped = [o.strip() for o in old_lines]\n    else:\n        current_joined = ' '.join(current_block)\n        old_joined = ' '.join(old_lines)\n        current_stripped = current_block\n        old_stripped = old_lines\n    exact_matches = sum(1 for c, o in zip(current_stripped, old_stripped) if\n        c == o)\n    if current_joined == old_joined:\n        return len(current_block) * 3\n    c_words = set(current_joined.split())\n    o_words = set(old_joined.split())\n    word_matches = len(c_words.intersection(o_words))\n    partial_score = 0\n    if word_matches > 0:\n        partial_score = word_matches / max(len(c_words), len(o_words))\n        if word_matches == len(c_words) and word_matches == len(o_words):\n            partial_score *= 2\n    total_score = exact_matches * 2 + partial_score\n    return total_score\n\n\ndef _has_line_number_prefix(line: str) ->bool:\n    \"\"\"Check if a string starts with a line number format (e.g., '123:' or '  123:')\n    Args:\n        line (str): The line to check\n    Returns:\n        bool: True if the line starts with a number followed by a colon\n    \"\"\"\n    stripped = line.lstrip()\n    if ':' not in stripped:\n        return False\n    prefix = stripped.split(':', 1)[0]\n    try:\n        int(prefix)\n        return True\n    except ValueError:\n        return False\n\n\ndef _strip_line_number(line: str) ->str:\n    \"\"\"Remove line number prefix if present (e.g., '123:content' or '  123:content' becomes 'content')\n    Preserves any leading whitespace before the line number.\n    Args:\n        line (str): The line to process\n    Returns:\n        str: The line with any line number prefix removed\n    \"\"\"\n    if not _has_line_number_prefix(line):\n        return line\n    whitespace = line[:len(line) - len(line.lstrip())]\n    stripped = line.lstrip()\n    content = stripped.split(':', 1)[1]\n    return whitespace + content",
+    "file_path": "C:\\Users\\benbu\\Code\\llm-utilities-git\\bots\\bots\\tools\\code_tools.py",
+    "code_hash": "893788a7e3c220f75e9a99389e7991f3"
+   }
+  },
+  "function_paths": {
+   "diff_edit": "C:\\Users\\benbu\\Code\\llm-utilities-git\\bots\\bots\\tools\\code_tools.py",
+   "view": "C:\\Users\\benbu\\Code\\llm-utilities-git\\bots\\bots\\tools\\code_tools.py",
+   "view_dir": "C:\\Users\\benbu\\Code\\llm-utilities-git\\bots\\bots\\tools\\code_tools.py"
+  }
+ },
+ "autosave": true,
+ "tool_path": "<module 'bots.tools.code_tools' from 'C:\\\\Users\\\\benbu\\\\Code\\\\llm-utilities-git\\\\bots\\\\bots\\\\tools\\\\code_tools.py'>",
+ "bot_class": "AnthropicBot"
+}

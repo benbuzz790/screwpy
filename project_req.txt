@@ -1,0 +1,111 @@
+# Fastener Analysis Library Technical Architecture
+
+## 1. Top-Level Project Requirements
+
+1. Unit Handling
+   - All numerical values must include units using pint library
+   - Support for both imperial and metric units
+   - Imperial units preferred but system must be unit-agnostic
+
+2. Code Structure
+   - Single directory structure (flat)
+   - Clear separation between data and analysis
+   - Type hints required
+   - Documentation strings required
+   - Python 3.x compatible
+
+3. Core Functionality
+   - Material property management
+   - Component representation (threaded and clamped)
+   - Junction assembly support
+   - Basic unit tests
+   - No analysis logic (deferred)
+
+## 2. System Architecture
+
+### Component Hierarchy
+```
+BaseComponent
+├── ThreadedComponent
+│   ├── Fastener
+│   └── Nut
+├── ClampedComponent
+│   ├── Washer
+│   └── PlateComponent
+└── ThreadedPlate
+
+Material
+├── GenericSteel
+└── GenericAluminum
+
+Junction (Standalone)
+```
+
+### Data Flow
+1. Materials provide properties to components
+2. Components combine into junctions
+3. All numerical data wrapped with units
+
+## 3. Module Structure
+
+### Core Modules
+1. units_config
+   - Unit registry configuration
+   - Base unit definitions
+
+2. materials
+   - Material base class
+   - Standard material implementations
+
+3. components
+   - Base component classes
+   - Threaded component implementations
+   - Clamped component implementations
+
+4. junctions
+   - Junction assembly logic
+   - Component relationship management
+
+5. utils
+   - Thread specification parsing
+   - Common unit conversions
+
+### Test Module
+- Comprehensive unit tests for all modules
+
+## 4. File Structure
+
+### Source Files
+1. units_config/
+   - units_config.py (unit registry and configurations)
+
+2. materials/
+   - material.py (base material class)
+   - standard_materials.py (steel and aluminum implementations)
+
+3. components/
+   - base_component.py (abstract base classes)
+   - threaded_components.py (fastener and nut)
+   - clamped_components.py (washer and plate)
+   - threaded_plate.py (hybrid component)
+
+4. junctions/
+   - junction.py (junction implementation)
+
+5. utils/
+   - thread_utils.py (thread specification handling)
+   - unit_utils.py (unit conversion helpers)
+
+### Test Files
+- test_materials.py
+- test_components.py
+- test_junctions.py
+- test_utils.py
+
+### Documentation
+- README.md (usage and setup)
+- requirements.txt (dependencies)
+
+## 5. Dependencies
+- pint (unit handling)
+- pytest (testing)

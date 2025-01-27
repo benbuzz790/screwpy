@@ -1,0 +1,121 @@
+# Requirements for material.py
+
+## Purpose
+Define the base Material class that provides the foundation for all material definitions in the system.
+
+## Top-Level Requirements Flow-Down
+
+### From Unit Handling Requirements
+1. All material properties must use pint units
+2. Must support both imperial and metric units
+3. Must be unit-agnostic in implementation
+4. Must handle unit conversions for all properties
+
+### From Code Structure Requirements
+1. Must use type hints
+2. Must include comprehensive docstrings
+3. Must be Python 3.x compatible
+4. Must maintain separation between data and analysis logic
+
+### From Core Functionality Requirements
+1. Must implement Material base class with all required properties
+2. Must support standard material property access
+3. Must provide foundation for material implementations
+
+## Specific Requirements
+
+### Material Base Class
+1. Required Material Properties (all with appropriate units):
+   - Yield strength (stress units)
+   - Ultimate strength (stress units)
+   - Density (mass/volume units)
+   - Poisson's ratio (dimensionless)
+   - Modulus of elasticity (stress units)
+   - Coefficient of thermal expansion (1/temperature units)
+
+2. Required Methods:
+   - Property getters and setters
+   - Unit conversion utilities
+   - Property validation
+   - Material identification
+
+### Property Requirements
+1. All properties must:
+   - Have appropriate units
+   - Be positive values (where applicable)
+   - Support unit conversion
+   - Have proper validation
+   - Be properly documented
+
+2. Specific Property Constraints:
+   - Yield strength must be less than ultimate strength
+   - Poisson's ratio must be between 0 and 0.5
+   - All strength values must be positive
+   - Density must be positive
+   - Modulus must be positive
+   - Thermal expansion coefficient must be positive
+
+### Unit Handling
+1. Must support standard unit types:
+   - Stress (Pa, psi)
+   - Density (kg/m³, lb/in³)
+   - Temperature (K, °C, °F)
+2. Must provide unit conversion methods
+3. Must validate unit types on assignment
+4. Must maintain unit consistency
+
+### Type Hints
+1. Must use proper type hints for:
+   - All method parameters
+   - All return values
+   - All property definitions
+2. Must properly type hint pint quantities
+3. Must properly type hint optional values
+
+### Documentation
+1. Must include docstrings for:
+   - The module
+   - The class
+   - Each method
+   - Each property
+2. Must include usage examples in docstrings
+3. Must include unit specifications in documentation
+4. Must document valid ranges for properties
+
+### Testing Requirements
+1. Must have 100% test coverage
+2. No mocking allowed in tests
+3. Must test:
+   - Material creation
+   - Property access and modification
+   - Unit conversions
+   - Validation logic
+   - Error conditions
+4. Must test with:
+   - Both imperial and metric units
+   - Edge case values
+   - Invalid values
+   - Unit conversion scenarios
+
+### Error Handling
+1. Must raise appropriate exceptions for:
+   - Invalid property values
+   - Unit conversion errors
+   - Validation failures
+   - Invalid unit types
+   - Property constraint violations
+
+### Dependencies
+1. Required imports:
+   - pint (for unit handling)
+   - typing (for type hints)
+   - abc (for abstract base class properties)
+2. Internal dependencies:
+   - units_config (for unit registry)
+
+### Implementation Notes
+1. Must be implemented as an abstract base class
+2. Must enforce unit requirements on all properties
+3. Must provide clear interface for derived classes
+4. Must include proper property decorators
+5. Must include proper abstract method decorators where needed

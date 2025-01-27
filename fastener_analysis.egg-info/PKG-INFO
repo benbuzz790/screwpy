@@ -1,0 +1,6 @@
+Metadata-Version: 2.2
+Name: fastener_analysis
+Version: 0.1
+Requires-Dist: pint
+Requires-Dist: pytest
+Dynamic: requires-dist

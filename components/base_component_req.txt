@@ -1,0 +1,89 @@
+# Requirements for base_component.py
+
+## Purpose
+Provide abstract base classes that define the core structure for all fastener assembly components.
+
+## Top-Level Requirements Flow-Down
+
+### From Unit Handling Requirements
+1. All numerical properties must use pint units
+2. Must support both imperial and metric units
+3. Must provide unit-agnostic interfaces
+
+### From Code Structure Requirements
+1. Must use type hints
+2. Must include comprehensive docstrings
+3. Must be Python 3.x compatible
+4. Must maintain separation between data and analysis logic
+
+### From Core Functionality Requirements
+1. Must define BaseComponent abstract base class
+2. Must define interfaces for material property access
+3. Must support component hierarchy through inheritance
+
+## Specific Requirements
+
+### BaseComponent Class
+1. Must be an abstract base class
+2. Must define interface for:
+   - Material property access
+   - Component identification
+   - Basic geometric properties
+   - Unit conversion utilities
+
+### Properties
+1. Required properties with units:
+   - Material reference (no units, but provides unit-based properties)
+   - Any geometric dimensions must use length units
+
+### Methods
+1. Must include abstract methods for:
+   - Material property access
+   - Basic geometric validation
+   - Unit conversion support
+2. Must include concrete methods for:
+   - Common unit conversions
+   - Basic property validation
+
+### Type Hints
+1. Must use proper type hints for:
+   - All method parameters
+   - All return values
+   - All property definitions
+2. Must properly type hint pint quantities
+
+### Documentation
+1. Must include docstrings for:
+   - The module
+   - Each class
+   - Each method
+   - Each property
+2. Must include usage examples in docstrings
+3. Must include unit specification in property documentation
+
+### Testing Requirements
+1. Must have 100% test coverage
+2. No mocking allowed in tests
+3. Must test:
+   - Class instantiation
+   - Property access
+   - Unit conversions
+   - Validation methods
+   - Error conditions
+4. Must include examples of both imperial and metric unit usage
+
+### Error Handling
+1. Must raise appropriate exceptions for:
+   - Invalid material assignments
+   - Invalid property values
+   - Unit conversion errors
+   - Validation failures
+
+### Dependencies
+1. Required imports:
+   - abc (for abstract base class)
+   - pint (for unit handling)
+   - typing (for type hints)
+2. Internal dependencies:
+   - units_config (for unit registry)
+   - materials.material (for material type hints)

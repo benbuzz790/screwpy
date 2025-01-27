@@ -1,0 +1,131 @@
+# Requirements for junction.py
+
+## Purpose
+Implement the Junction class that manages the assembly of fastener, clamped components, and threaded members.
+
+## Top-Level Requirements Flow-Down
+
+### From Unit Handling Requirements
+1. All dimensional calculations must use pint units
+2. Must support both imperial and metric units
+3. Must be unit-agnostic in implementation
+4. Must maintain unit consistency across all components
+
+### From Code Structure Requirements
+1. Must use type hints
+2. Must include comprehensive docstrings
+3. Must be Python 3.x compatible
+4. Must maintain separation between data and analysis logic
+
+### From Core Functionality Requirements
+1. Must implement Junction class to manage:
+   - One fastener
+   - One or more clamped members
+   - One threaded member
+2. Must support basic assembly validation
+3. Must maintain component relationships
+
+## Specific Requirements
+
+### Junction Class
+1. Required Components:
+   - Exactly one Fastener instance
+   - One or more ClampedComponent instances (list/sequence)
+   - Exactly one ThreadedComponent instance (either Nut or ThreadedPlate)
+
+2. Required Properties:
+   - Fastener reference
+   - Clamped components list
+   - Threaded member reference
+   - Total grip length (calculated, with units)
+   - Stack-up thickness (calculated, with units)
+
+3. Required Methods:
+   - Add/remove clamped components
+   - Set/update fastener
+   - Set/update threaded member
+   - Calculate grip length
+   - Calculate stack-up thickness
+   - Validate assembly
+
+### Validation Requirements
+1. Basic Assembly Validation:
+   - Thread compatibility between fastener and threaded member
+   - Sufficient fastener length for assembly
+   - Compatible material combinations
+   - Proper component ordering
+   - No duplicate components
+   - Valid grip length
+
+2. Component Specific Validation:
+   - Fastener length > stack-up thickness
+   - Compatible thread specifications
+   - Proper washer placement (if present)
+   - Valid component dimensions
+
+### Geometric Calculations
+1. Must calculate with units:
+   - Total grip length
+   - Stack-up thickness
+   - Thread engagement length
+2. Must maintain unit consistency across calculations
+
+### Type Hints
+1. Must use proper type hints for:
+   - All method parameters
+   - All return values
+   - All property definitions
+2. Must properly type hint:
+   - Component collections
+   - Pint quantities
+   - Optional components
+
+### Documentation
+1. Must include docstrings for:
+   - The module
+   - The class
+   - Each method
+   - Each property
+2. Must include usage examples in docstrings
+3. Must include unit specification in documentation
+4. Must document assembly requirements and constraints
+
+### Testing Requirements
+1. Must have 100% test coverage
+2. No mocking allowed in tests
+3. Must test:
+   - Junction creation
+   - Component addition/removal
+   - Property access
+   - Geometric calculations
+   - Validation logic
+   - Error conditions
+4. Must test with:
+   - Various component combinations
+   - Different thread specifications
+   - Both imperial and metric units
+   - Different material combinations
+   - Edge cases in component counts
+   - Invalid assemblies
+
+### Error Handling
+1. Must raise appropriate exceptions for:
+   - Invalid component combinations
+   - Thread mismatches
+   - Insufficient fastener length
+   - Invalid component ordering
+   - Unit conversion errors
+   - Validation failures
+   - Invalid component additions/removals
+
+### Dependencies
+1. Required imports:
+   - pint (for unit handling)
+   - typing (for type hints)
+2. Internal dependencies:
+   - units_config (for unit registry)
+   - components.base_component (for type hints)
+   - components.threaded_components (for Fastener and Nut)
+   - components.clamped_components (for washers and plates)
+   - components.threaded_plate (for ThreadedPlate)
+   - utils.thread_utils (for thread compatibility checking)

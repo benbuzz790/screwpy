@@ -1,0 +1,130 @@
+# Requirements for threaded_components.py
+
+## Purpose
+Implement concrete classes for threaded components (Fastener and Nut) in fastener assemblies.
+
+## Top-Level Requirements Flow-Down
+
+### From Unit Handling Requirements
+1. All dimensional values must use pint units
+2. Must support both imperial and metric units
+3. Must be unit-agnostic in implementation
+4. Thread specifications must be strings with integer pitch diameters
+
+### From Code Structure Requirements
+1. Must use type hints
+2. Must include comprehensive docstrings
+3. Must be Python 3.x compatible
+4. Must maintain separation between data and analysis logic
+
+### From Core Functionality Requirements
+1. Must implement ThreadedComponent subclasses:
+   - Fastener
+   - Nut
+2. Must integrate with material system
+3. Must support thread specifications
+
+## Specific Requirements
+
+### Class Hierarchy
+1. Must inherit from BaseComponent
+2. Must implement ThreadedComponent abstract class
+3. Must implement all abstract methods from parent classes
+
+### ThreadedComponent Abstract Class
+1. Required properties with units:
+   - Thread specification (string)
+   - Pitch diameter (length units)
+   - Threaded section length (length units)
+   - Material reference
+2. Common validation requirements:
+   - Valid thread specification format
+   - Positive dimensions
+   - Valid material reference
+
+### Fastener Class
+1. Required properties with units:
+   - Length (length units)
+   - Head diameter (length units)
+   - Head height (length units)
+   - All ThreadedComponent properties
+2. Required non-unit properties:
+   - Type (Flat/Not flat boolean)
+   - Tool size (string)
+3. Validation requirements:
+   - Head diameter > pitch diameter
+   - Length > threaded length
+   - All dimensions positive
+   - Valid tool size specification
+
+### Nut Class
+1. Required properties:
+   - All ThreadedComponent properties
+2. Additional properties with units:
+   - Width across flats (length units)
+   - Height (length units)
+3. Validation requirements:
+   - Width across flats > pitch diameter
+   - All dimensions positive
+
+### Common Requirements
+1. Property access methods:
+   - Getters and setters for all properties
+   - Material property access
+2. Unit conversion support:
+   - Convert between metric and imperial
+   - Maintain unit consistency
+3. Thread specification handling:
+   - Parse thread specifications
+   - Calculate/store pitch diameters
+   - Support standard thread series (UNC, UNF)
+
+### Type Hints
+1. Must use proper type hints for:
+   - All method parameters
+   - All return values
+   - All property definitions
+2. Must properly type hint pint quantities
+3. Must properly type hint thread specifications
+
+### Documentation
+1. Must include docstrings for:
+   - The module
+   - Each class
+   - Each method
+   - Each property
+2. Must include usage examples in docstrings
+3. Must include unit specification in property documentation
+4. Must document thread specification format
+
+### Testing Requirements
+1. Must have 100% test coverage
+2. No mocking allowed in tests
+3. Must test:
+   - Component creation
+   - Property access and modification
+   - Unit conversions
+   - Thread specification parsing
+   - Validation logic
+   - Error conditions
+4. Must include examples with both imperial and metric units
+5. Must test integration with material system
+6. Must test various thread specifications
+
+### Error Handling
+1. Must raise appropriate exceptions for:
+   - Invalid dimensions
+   - Invalid thread specifications
+   - Invalid material assignments
+   - Unit conversion errors
+   - Validation failures
+
+### Dependencies
+1. Required imports:
+   - pint (for unit handling)
+   - typing (for type hints)
+2. Internal dependencies:
+   - units_config (for unit registry)
+   - materials.material (for material type hints)
+   - components.base_component (for base class)
+   - utils.thread_utils (for thread specification handling)
