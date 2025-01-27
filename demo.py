@@ -34,7 +34,7 @@ def main():
     
     # Create a fastener
     bolt = Fastener(
-        thread_spec="1/4-20",
+        thread_spec="1/4-20 UNC",
         length=2.0 * ureg.inch,
         threaded_length=1.5 * ureg.inch,
         head_diameter=0.5 * ureg.inch,
@@ -63,7 +63,7 @@ def main():
 
     # Create nut
     nut = Nut(
-        thread_spec="1/4-20",
+        thread_spec="1/4-20 UNC",
         width_across_flats=0.5 * ureg.inch,
         height=0.25 * ureg.inch,
         material=steel

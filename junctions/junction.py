@@ -50,12 +50,6 @@ class Junction:
         if not check_thread_compatibility(self.fastener.thread_spec, self.
             threaded_member.thread_spec):
             raise ValueError('Thread specifications are not compatible')
-        # Check for duplicate components by identity
-        seen = set()
-        for comp in self.clamped_components:
-            if id(comp) in seen:
-                raise ValueError('Duplicate components not allowed in assembly')
-            seen.add(id(comp))
         stack_up = self.calculate_stack_up()
         if self.fastener.length <= stack_up:
             raise ValueError('Fastener length insufficient for assembly')

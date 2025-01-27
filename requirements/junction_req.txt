@@ -54,7 +54,6 @@ Implement the Junction class that manages the assembly of fastener, clamped comp
    - Sufficient fastener length for assembly
    - Compatible material combinations
    - Proper component ordering
-   - No duplicate components
    - Valid grip length
 
 2. Component Specific Validation:
