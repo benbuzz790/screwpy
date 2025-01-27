@@ -10,10 +10,15 @@ ScrewPy is a Python library for analyzing bolted joints and fastener assemblies.
 - Assembly validation
 - Unit conversion handling using Pint
 
+## Limitations
+
+- At present, only data structures and utilities exist (no analysis)
+- No support for thread types outside of UNC, UNF, and M
+
 ## Installation
 
 ```bash
-pip install screwpy
+pip install git+https://github.com/benbuzz790/screwpy.git
 ```
 
 ## Quick Start
