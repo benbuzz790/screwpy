@@ -66,7 +66,7 @@ tests/test_threaded_components.py::TestFastener::test_property_setters FAILED [ 
 tests/test_threaded_components.py::TestFastener::test_unit_conversion PASSED [ 68%]
 tests/test_threaded_components.py::TestNut::test_invalid_dimensions PASSED [ 69%]
 tests/test_threaded_components.py::TestNut::test_nut_creation PASSED     [ 70%]
-tests/test_threaded_components.py::TestNut::test_property_setters FAILED [ 71%]
+tests/test_threaded_components.py::TestNut::test_property_setters PASSED [ 71%]
 tests/test_threaded_components.py::TestNut::test_unit_conversion PASSED  [ 73%]
 tests/test_threaded_plate.py::TestThreadedPlate::test_imperial_units PASSED [ 74%]
 tests/test_threaded_plate.py::TestThreadedPlate::test_initialization PASSED [ 75%]
@@ -87,9 +87,9 @@ tests/test_unit_utils.py::TestUnitUtils::test_safe_add PASSED            [ 92%]
 tests/test_unit_utils.py::TestUnitUtils::test_safe_divide PASSED         [ 93%]
 tests/test_unit_utils.py::TestUnitUtils::test_safe_multiply PASSED       [ 95%]
 tests/test_unit_utils.py::TestUnitUtils::test_standardize_units PASSED   [ 96%]
-tests/test_unit_utils.py::TestUnitUtils::test_to_imperial FAILED         [ 97%]
-tests/test_unit_utils.py::TestUnitUtils::test_to_metric FAILED           [ 98%]
-tests/test_unit_utils.py::TestUnitUtils::test_validate_unit_dimension FAILED [100%]
+tests/test_unit_utils.py::TestUnitUtils::test_to_imperial PASSED         [ 97%]
+tests/test_unit_utils.py::TestUnitUtils::test_to_metric PASSED           [ 98%]
+tests/test_unit_utils.py::TestUnitUtils::test_validate_unit_dimension PASSED [100%]
 
 ================================== FAILURES ===================================
 _____________________ TestFastener.test_property_setters ______________________
@@ -98,60 +98,33 @@ self = <temp3.tests.test_threaded_components.TestFastener testMethod=test_proper
 
     def test_property_setters(self):
         """Test property setters with validation."""
->       self.fastener.length = 2.5 * ureg.inch
-E       AttributeError: property 'length' of 'Fastener' object has no setter
+        self.fastener.length = 2.5 * ureg.inch
+        self.assertEqual(self.fastener.length, 2.5 * ureg.inch)
+        self.fastener.is_flat = True
+        self.assertTrue(self.fastener.is_flat)
+        with self.assertRaises(ValueError):
+>           self.fastener.head_diameter = 0.1 * ureg.inch
 
-tests\test_threaded_components.py:54: AttributeError
-________________________ TestNut.test_property_setters ________________________
+tests\test_threaded_components.py:59: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+components\threaded_components.py:116: in head_diameter
+    self.validate_geometry()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
 
-self = <temp3.tests.test_threaded_components.TestNut testMethod=test_property_setters>
+    def validate_geometry(self) -> bool:
+        """Validate fastener geometry.
+    
+        Returns:
+            True if geometry is valid
+    
+        Raises:
+            ValueError: If geometry is invalid
+        """
+>       if (self._length.magnitude <= 0 or self._head_diameter.magnitude <= 0 or
+            self._head_height.magnitude <= 0):
+E           TypeError: '<=' not supported between instances of 'property' and 'int'
 
-    def test_property_setters(self):
-        """Test property setters with validation."""
->       self.nut.height = 0.25 * ureg.inch
-E       AttributeError: property 'height' of 'Nut' object has no setter
-
-tests\test_threaded_components.py:99: AttributeError
-_______________________ TestUnitUtils.test_to_imperial ________________________
-
-self = <temp3.tests.test_unit_utils.TestUnitUtils testMethod=test_to_imperial>
-
-    def test_to_imperial(self):
-        """Test conversion to imperial units."""
-        self.assertEqual(to_imperial(25.4 * ureg.millimeter), 1 * ureg.inch)
-        self.assertTrue(compare_with_tolerance(to_imperial(4.44822 * ureg.newton), 1 * ureg.lbf, 1e-6))
-        self.assertTrue(compare_with_tolerance(to_imperial(6894.76 * ureg.pascal), 1 * ureg.psi, 1e-6))
->       self.assertEqual(to_imperial(300 * ureg.kelvin).units, ureg.degF.units)
-E       AttributeError: 'Unit' object has no attribute 'units'. Did you mean: '_units'?
-
-tests\test_unit_utils.py:15: AttributeError
-________________________ TestUnitUtils.test_to_metric _________________________
-
-self = <temp3.tests.test_unit_utils.TestUnitUtils testMethod=test_to_metric>
-
-    def test_to_metric(self):
-        """Test conversion to metric units."""
-        self.assertEqual(to_metric(1 * ureg.inch), 25.4 * ureg.millimeter)
-        self.assertTrue(compare_with_tolerance(to_metric(1 * ureg.lbf), 4.44822 * ureg.newton, 1e-6))
-        psi = 1 * ureg.psi
->       self.assertEqual(str(to_metric(psi).units), 'megapascal')
-E       AssertionError: 'MPa' != 'megapascal'
-E       - MPa
-E       + megapascal
-
-tests\test_unit_utils.py:30: AssertionError
-_________________ TestUnitUtils.test_validate_unit_dimension __________________
-
-self = <temp3.tests.test_unit_utils.TestUnitUtils testMethod=test_validate_unit_dimension>
-
-    def test_validate_unit_dimension(self):
-        """Test dimension validation."""
-        self.assertTrue(is_valid_unit_type(1 * ureg.meter, 'length'))
->       self.assertTrue(validate_unit_dimension(1 * ureg('kg/m^3'),
-            '[mass]/[length]^3'))
-E       AssertionError: False is not true
-
-tests\test_unit_utils.py:77: AssertionError
+components\threaded_components.py:88: TypeError
 ============================== warnings summary ===============================
 units_config\__init__.py:38
   C:\Users\benbu\Code\temp3\units_config\__init__.py:38: DeprecationWarning: This function will be removed in future versions of pint.
@@ -177,8 +150,4 @@ tests\test_base_component.py:124
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 =========================== short test summary info ===========================
 FAILED tests/test_threaded_components.py::TestFastener::test_property_setters
-FAILED tests/test_threaded_components.py::TestNut::test_property_setters - At...
-FAILED tests/test_unit_utils.py::TestUnitUtils::test_to_imperial - AttributeE...
-FAILED tests/test_unit_utils.py::TestUnitUtils::test_to_metric - AssertionErr...
-FAILED tests/test_unit_utils.py::TestUnitUtils::test_validate_unit_dimension
-============= 5 failed, 72 passed, 5 skipped, 5 warnings in 1.27s =============
+============= 1 failed, 76 passed, 5 skipped, 5 warnings in 1.40s =============

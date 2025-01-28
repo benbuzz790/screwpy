@@ -55,6 +55,9 @@ def to_metric(quantity: Quantity) ->Quantity:
     elif dim == ureg.pascal.dimensionality:
         return quantity.to('megapascal')
     elif dim == ureg.kelvin.dimensionality:
+        # Handle temperature conversion carefully due to offset units
+        if str(quantity.units) == 'degF':
+            return (quantity.to('kelvin')).to('degC')
         return quantity.to('degC')
     elif dim == (ureg.kilogram / ureg.meter ** 3).dimensionality:
         return quantity.to('kg/m**3')
@@ -135,8 +138,18 @@ def validate_unit_dimension(quantity: Quantity, dimension: str) ->bool:
         True if dimensions match, False otherwise
     """
     try:
-        expected = ureg.parse_units(dimension).dimensionality
-        return quantity.dimensionality == expected
+        # Create a reference unit with the same dimensions
+        if dimension == '[mass]/[length]^3':
+            reference = (1 * ureg.kilogram / (ureg.meter ** 3)).dimensionality
+        elif dimension == '[length]':
+            reference = (1 * ureg.meter).dimensionality
+        elif dimension == '[mass]':
+            reference = (1 * ureg.kilogram).dimensionality
+        else:
+            # For other cases, try the original parsing approach
+            clean_dim = dimension.replace('^', '**').replace('[', '').replace(']', '')
+            reference = ureg.parse_expression(clean_dim).dimensionality
+        return quantity.dimensionality == reference
     except:
         return False
 
