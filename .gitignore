@@ -51,7 +51,5 @@ venv.bak/
 
 # Project specific
 scratch.py
-powershell_full_output.txt
-*.bot
 start.py
 process_bots.py

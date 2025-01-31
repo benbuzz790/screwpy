@@ -1,6 +1,6 @@
 import unittest
 from components.clamped_components import Washer, PlateComponent
-from tests.test_base_component import TestMaterial
+from tests.test_material import create_test_material
 from units_config import ureg
 
 
@@ -9,7 +9,7 @@ class TestWasher(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-        self.material = TestMaterial('Steel', {'yield_strength': 250 * ureg.MPa})
+        self.material = create_test_material('Steel')
         self.washer = Washer(inner_diameter=10 * ureg.mm, outer_diameter=20 *
             ureg.mm, thickness=2 * ureg.mm, material=self.material)
 
@@ -67,7 +67,7 @@ class TestPlateComponent(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-        self.material = TestMaterial('Steel', {'yield_strength': 250 * ureg.MPa})
+        self.material = create_test_material('Steel')
         self.plate = PlateComponent(thickness=5 * ureg.mm, material=self.
             material)
 
@@ -90,7 +90,7 @@ class TestPlateComponent(unittest.TestCase):
         self.assertEqual(self.plate.material, self.material)
         self.plate.thickness = 6 * ureg.mm
         self.assertEqual(self.plate.thickness, 6 * ureg.mm)
-        new_material = TestMaterial('Aluminum', {'yield_strength': 200 * ureg.MPa})
+        new_material = create_test_material('Aluminum')
         self.plate.material = new_material
         self.assertEqual(self.plate.material, new_material)
 

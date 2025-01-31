@@ -1,7 +1,7 @@
 import unittest
 from pint import Quantity
 from units_config import ureg
-from tests.test_base_component import TestMaterial
+from tests.test_material import create_test_material
 from components.threaded_components import ThreadedComponent, Fastener, Nut
 
 
@@ -10,7 +10,7 @@ class TestFastener(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-        self.material = TestMaterial('Steel', {'yield_strength': 250 * ureg.MPa})
+        self.material = create_test_material('Steel')
         self.fastener = Fastener(thread_spec='1/4-20 UNC', length=2 * ureg.inch,
             threaded_length=1.5 * ureg.inch, head_diameter=0.5 * ureg.inch,
             head_height=0.25 * ureg.inch, is_flat=False, tool_size='3/8',
@@ -66,7 +66,8 @@ class TestNut(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-        self.material = TestMaterial('Steel', {'yield_strength': 250 * ureg.MPa})
+        self.material = create_test_material('Steel')
+        self.material.yield_strength = 250 * ureg.MPa
         self.nut = Nut(thread_spec='1/4-20 UNC', width_across_flats=7 / 16 *
             ureg.inch, height=7 / 32 * ureg.inch, material=self.material)
 

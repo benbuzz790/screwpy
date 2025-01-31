@@ -10,7 +10,7 @@ Provide utility functions for common unit operations and conversions across the 
 2. Must support both imperial and metric units
 3. Must be unit-agnostic in implementation
 4. Must provide consistent unit conversion utilities
-5. Must prefer imperial units while supporting metric
+5. Must follow NASA standards for default unit system
 
 ### From Code Structure Requirements
 1. Must use type hints
@@ -27,7 +27,7 @@ Provide utility functions for common unit operations and conversions across the 
    - Stress conversions (psi <-> MPa)
    - Temperature conversions (°F <-> °C, K)
    - Density conversions (lb/in³ <-> kg/m³)
-   - Thermal expansion conversions (1/°F <-> 1/K)
+   - Thermal expansion conversions (1/°F <-> 1/K) [TBD - requires specification]
 
 2. Must provide standardization functions:
    - Convert to standard imperial units
@@ -47,7 +47,6 @@ Provide utility functions for common unit operations and conversions across the 
    - Unit multiplication with validation
    - Unit division with validation
    - Unit comparison with tolerance
-   - Unit rounding
    - Unit formatting
 
 ### Type Hints
@@ -83,7 +82,6 @@ Provide utility functions for common unit operations and conversions across the 
    - Error conditions
 4. Must test with:
    - Both imperial and metric units
-   - Edge cases
    - Invalid conversions
    - Different unit types
    - Dimensionless quantities

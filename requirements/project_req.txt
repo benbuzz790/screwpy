@@ -1,111 +1,81 @@
-# Fastener Analysis Library Technical Architecture
+# NASA 5020 Analysis Module Requirements
 
-## 1. Top-Level Project Requirements
+## 1. Top-Level Requirements
 
-1. Unit Handling
-   - All numerical values must include units using pint library
-   - Support for both imperial and metric units
-   - Imperial units preferred but system must be unit-agnostic
+1. Implement NASA-STD-5020 bolted joint analysis capabilities
+2. Maintain strict unit safety using Pint
+3. Keep all files in a flat directory structure
+4. Separate data structures (existing) from analysis (new)
+5. Follow SOLID principles and KISS methodology
+6. Provide comprehensive unit testing
+7. Include type hints and documentation
 
-2. Code Structure
-   - Single directory structure (flat)
-   - Clear separation between data and analysis
-   - Type hints required
-   - Documentation strings required
-   - Python 3.x compatible
+## 2. Architecture
 
-3. Core Functionality
-   - Material property management
-   - Component representation (threaded and clamped)
-   - Junction assembly support
-   - Basic unit tests
-   - No analysis logic (deferred)
+The system consists of two main modules:
 
-## 2. System Architecture
+1. Environments Module
+   - Handles physical conditions and loading scenarios
+   - Validates input parameters
+   - Converts 6DOF loads to fastener loads
 
-### Component Hierarchy
-```
-BaseComponent
-├── ThreadedComponent
-│   ├── Fastener
-│   └── Nut
-├── ClampedComponent
-│   ├── Washer
-│   └── PlateComponent
-└── ThreadedPlate
+2. Analysis Module
+   - Implements NASA-STD-5020 calculations
+   - Calculates joint stiffness
+   - Determines safety margins
+   - Handles temperature effects
 
-Material
-├── GenericSteel
-└── GenericAluminum
+## 3. Module Specifications
 
-Junction (Standalone)
-```
+### 3.1 Environments Module
+Purpose: Represent and validate physical conditions for analysis
 
-### Data Flow
-1. Materials provide properties to components
-2. Components combine into junctions
-3. All numerical data wrapped with units
+Files:
+- environment.py
+    - Environment class
+    - Input validation
+    - 6DOF load conversion
+    - Temperature validation
+    - Unit validation
 
-## 3. Module Structure
+### 3.2 Analysis Module
+Purpose: Implement NASA-STD-5020 analysis methods
 
-### Core Modules
-1. units_config
-   - Unit registry configuration
-   - Base unit definitions
+Files:
+- nasa5020.py
+    - NASA5020Analysis class
+    - Preload calculations
+    - Joint stiffness analysis
+    - Ultimate strength margins
+    - Yield strength margins
+    - Slip margin
+    - Separation margin
 
-2. materials
-   - Material base class
-   - Standard material implementations
+### 3.3 Test Module
+Purpose: Verify implementation correctness
 
-3. components
-   - Base component classes
-   - Threaded component implementations
-   - Clamped component implementations
+Files:
+- test_environment.py
+    - Environment class tests
+    - Input validation tests
+    - Load conversion tests
+- test_nasa5020.py
+    - Analysis calculations tests
+    - NASA example verification
+    - Edge case testing
+    - Temperature effect tests
+    - Combined loading tests
 
-4. junctions
-   - Junction assembly logic
-   - Component relationship management
+## 4. Dependencies
 
-5. utils
-   - Thread specification parsing
-   - Common unit conversions
+- Existing project modules (Junction, components, materials)
+- Pint for unit handling
+- pytest for testing
 
-### Test Module
-- Comprehensive unit tests for all modules
+## 5. Constraints
 
-## 4. File Structure
-
-### Source Files
-1. units_config/
-   - units_config.py (unit registry and configurations)
-
-2. materials/
-   - material.py (base material class)
-   - standard_materials.py (steel and aluminum implementations)
-
-3. components/
-   - base_component.py (abstract base classes)
-   - threaded_components.py (fastener and nut)
-   - clamped_components.py (washer and plate)
-   - threaded_plate.py (hybrid component)
-
-4. junctions/
-   - junction.py (junction implementation)
-
-5. utils/
-   - thread_utils.py (thread specification handling)
-   - unit_utils.py (unit conversion helpers)
-
-### Test Files
-- test_materials.py
-- test_components.py
-- test_junctions.py
-- test_utils.py
-
-### Documentation
-- README.md (usage and setup)
-- requirements.txt (dependencies)
-
-## 5. Dependencies
-- pint (unit handling)
-- pytest (testing)
+1. All numerical values must include units via Pint
+2. All equations must match NASA-STD-5020 exactly
+3. All public methods must have type hints
+4. All calculations must reference NASA equations in docstrings
+5. Maintain separation between data and analysis concerns

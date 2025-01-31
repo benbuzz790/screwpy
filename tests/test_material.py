@@ -1,4 +1,4 @@
-"""Test cases for the Material base class."""
+"""Test cases for the Material class."""
 
 import unittest
 from materials.material import Material
@@ -6,20 +6,24 @@ from units_config import ureg
 import pint
 
 
-class ConcreteMaterial(Material):
-    """Concrete implementation of Material for testing."""
-    
-    def identify(self) -> str:
-        """Return material identification."""
-        return "Test Material"
-
-
 class TestMaterial(unittest.TestCase):
-    """Test cases for the Material base class."""
+    """Test cases for the Material class."""
 
     def setUp(self):
         """Set up test fixtures."""
-        self.material = ConcreteMaterial()
+        self.material = Material("Test Material")
+
+    def test_name(self):
+        """Test name property."""
+        self.assertEqual(self.material.name, "Test Material")
+        self.material.name = "New Name"
+        self.assertEqual(self.material.name, "New Name")
+        with self.assertRaises(TypeError):
+            self.material.name = 123
+        with self.assertRaises(ValueError):
+            self.material.name = ""
+        with self.assertRaises(ValueError):
+            self.material.name = "   "
 
     def test_yield_strength(self):
         """Test yield strength property."""
@@ -97,7 +101,7 @@ class TestMaterial(unittest.TestCase):
 
     def test_property_access_before_setting(self):
         """Test accessing properties before they are set."""
-        material = ConcreteMaterial()
+        material = Material("Fresh Material")
         with self.assertRaises(ValueError):
             _ = material.yield_strength
         with self.assertRaises(ValueError):
@@ -109,10 +113,23 @@ class TestMaterial(unittest.TestCase):
         with self.assertRaises(ValueError):
             _ = material.thermal_expansion
 
-    def test_identify(self):
-        """Test material identification."""
-        self.assertEqual(self.material.identify(), "Test Material")
-
 
 if __name__ == '__main__':
     unittest.main()
+def create_test_material(name: str = "Test Material") -> Material:
+    """Create a Material instance with standard test values.
+    
+    Args:
+        name: Optional name for the material, defaults to "Test Material"
+    
+    Returns:
+        Material: A Material instance with standard test values
+    """
+    material = Material(name)
+    material.yield_strength = 250 * ureg.megapascal
+    material.ultimate_strength = 400 * ureg.megapascal
+    material.density = 7850 * ureg('kg/m^3')
+    material.poisson_ratio = 0.29
+    material.elastic_modulus = 200 * ureg.gigapascal
+    material.thermal_expansion = 1.17e-05 * ureg('1/K')
+    return material

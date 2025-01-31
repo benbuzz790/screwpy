@@ -18,13 +18,14 @@ Define the base Material class that provides the foundation for all material def
 4. Must maintain separation between data and analysis logic
 
 ### From Core Functionality Requirements
-1. Must implement Material base class with all required properties
-2. Must support standard material property access
-3. Must provide foundation for material implementations
+1. Must implement Material class with all required properties
+2. Must support standard material property access and modification
+3. Must support instantiation with material name/specification
 
 ## Specific Requirements
 
-### Material Base Class
+### Material Class
+   - Name/specification (string)
 1. Required Material Properties (all with appropriate units):
    - Yield strength (stress units)
    - Ultimate strength (stress units)
@@ -37,7 +38,7 @@ Define the base Material class that provides the foundation for all material def
    - Property getters and setters
    - Unit conversion utilities
    - Property validation
-   - Material identification
+   - Property initialization
 
 ### Property Requirements
 1. All properties must:
@@ -109,13 +110,13 @@ Define the base Material class that provides the foundation for all material def
 1. Required imports:
    - pint (for unit handling)
    - typing (for type hints)
-   - abc (for abstract base class properties)
+   - typing (for type hints)
 2. Internal dependencies:
    - units_config (for unit registry)
 
 ### Implementation Notes
-1. Must be implemented as an abstract base class
+1. Must be implemented as a concrete class that can be instantiated
 2. Must enforce unit requirements on all properties
-3. Must provide clear interface for derived classes
+3. Must enforce name/specification requirements
 4. Must include proper property decorators
-5. Must include proper abstract method decorators where needed
+5. Must support creation of standard material instances

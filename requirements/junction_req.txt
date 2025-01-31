@@ -67,6 +67,9 @@ Implement the Junction class that manages the assembly of fastener, clamped comp
    - Total grip length
    - Stack-up thickness
    - Thread engagement length
+   - Joint stiffness (per NASA-TM-106943) #NEW
+   - Member stiffness (per NASA-TM-106943) #NEW
+   - Stiffness factor (NASA-TM-106943) #NEW
 2. Must maintain unit consistency across calculations
 
 ### Type Hints

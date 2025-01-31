@@ -1,7 +1,12 @@
 import unittest
 from pint import Quantity
 from units_config import ureg
-from utils.unit_utils import to_imperial, to_metric, standardize_units, is_valid_unit_type, are_units_compatible, validate_unit_dimension, safe_add, safe_multiply, safe_divide, compare_with_tolerance, format_quantity, format_with_units
+from utils.unit_utils import (
+    to_imperial, to_metric, standardize_units, 
+    is_valid_unit_type, are_units_compatible, validate_unit_dimension, 
+    safe_add, safe_multiply, safe_divide, compare_with_tolerance, 
+    format_quantity, format_with_units, format_unit_string
+)
 
 
 class TestUnitUtils(unittest.TestCase):
@@ -9,10 +14,16 @@ class TestUnitUtils(unittest.TestCase):
 
     def test_to_imperial(self):
         """Test conversion to imperial units."""
+        # Test numeric conversions
         self.assertEqual(to_imperial(25.4 * ureg.millimeter), 1 * ureg.inch)
         self.assertTrue(compare_with_tolerance(to_imperial(4.44822 * ureg.newton), 1 * ureg.lbf, 1e-6))
         self.assertTrue(compare_with_tolerance(to_imperial(6894.76 * ureg.pascal), 1 * ureg.psi, 1e-6))
-        self.assertEqual(str(to_imperial(300 * ureg.kelvin).units), '°F')
+    
+        # Test unit string formatting
+        temp = to_imperial(300 * ureg.kelvin)
+        self.assertEqual(format_unit_string(str(temp.units)), '°F')
+    
+        # Test other unit handling
         density = 1000 * ureg('kg/m^3')
         self.assertEqual(to_imperial(density).units, ureg('lb/inch^3').units)
         self.assertEqual(to_imperial(0.5 * ureg.dimensionless), 0.5 * ureg.dimensionless)
@@ -21,11 +32,16 @@ class TestUnitUtils(unittest.TestCase):
 
     def test_to_metric(self):
         """Test conversion to metric units."""
+        # Test numeric conversions
         self.assertEqual(to_metric(1 * ureg.inch), 25.4 * ureg.millimeter)
         self.assertTrue(compare_with_tolerance(to_metric(1 * ureg.lbf), 4.44822 * ureg.newton, 1e-6))
+    
+        # Test unit string formatting
         psi = 1 * ureg.psi
-        self.assertEqual(str(to_metric(psi).units), 'MPa')
-        self.assertEqual(str(to_metric(70 * ureg.kelvin).units), '°C')
+        self.assertEqual(format_unit_string(str(to_metric(psi).units)), 'MPa')
+        self.assertEqual(format_unit_string(str(to_metric(70 * ureg.kelvin).units)), '°C')
+    
+        # Test other unit handling
         density = 0.1 * ureg('lb/inch^3')
         self.assertEqual(to_metric(density).units, ureg('kg/m^3').units)
         self.assertEqual(to_metric(0.5 * ureg.dimensionless), 0.5 * ureg.dimensionless)
@@ -42,18 +58,16 @@ class TestUnitUtils(unittest.TestCase):
             standardize_units(length, 'invalid')
 
     def test_is_valid_unit_type(self):
-        """Test unit type validation."""
-        self.assertTrue(is_valid_unit_type(1 * ureg.meter, 'length'))
-        self.assertFalse(is_valid_unit_type(1 * ureg.newton, 'length'))
-        self.assertTrue(is_valid_unit_type(1 * ureg.newton, 'force'))
-        self.assertFalse(is_valid_unit_type(1 * ureg.meter, 'force'))
-        self.assertTrue(is_valid_unit_type(1 * ureg.pascal, 'pressure'))
-        self.assertTrue(is_valid_unit_type(1 * ureg.kelvin, 'temperature'))
-        self.assertTrue(is_valid_unit_type(1 * ureg('kg/m^3'), 'density'))
-        self.assertTrue(is_valid_unit_type(1 * ureg('1/K'),
-            'thermal_expansion'))
-        self.assertTrue(is_valid_unit_type(1 * ureg.dimensionless,
-            'dimensionless'))
+        """Test unit type validation using dimensionality strings."""
+        self.assertTrue(is_valid_unit_type(1 * ureg.meter, '[L]'))
+        self.assertFalse(is_valid_unit_type(1 * ureg.newton, '[L]'))
+        self.assertTrue(is_valid_unit_type(1 * ureg.newton, '[M][L]/[T]^2'))
+        self.assertFalse(is_valid_unit_type(1 * ureg.meter, '[M][L]/[T]^2'))
+        self.assertTrue(is_valid_unit_type(1 * ureg.pascal, '[M][L]/[T]^2/[L]^2'))
+        self.assertTrue(is_valid_unit_type(1 * ureg.kelvin, '[T]'))
+        self.assertTrue(is_valid_unit_type(1 * ureg('kg/m^3'), '[M]/[L]^3'))
+        self.assertTrue(is_valid_unit_type(1 * ureg('1/K'), '1/[T]'))
+        self.assertTrue(is_valid_unit_type(1 * ureg.dimensionless, ''))
         with self.assertRaises(ValueError):
             is_valid_unit_type(1 * ureg.meter, 'invalid')
 

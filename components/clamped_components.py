@@ -31,9 +31,16 @@ class ClampedComponent(BaseComponent, ABC):
         pass
 
     @abstractmethod
-    def validate_geometry(self) ->None:
-        """Validate the component's geometric properties."""
-        pass
+    def validate_geometry(self) -> bool:
+        """Validate the component's geometric properties.
+        
+        Returns:
+            True if geometry is valid
+            
+        Raises:
+            ValueError: If geometry is invalid, with specific reason
+        """
+        raise NotImplementedError("validate_geometry must be implemented by subclass")
 
 
 from typing import Optional
@@ -177,18 +184,19 @@ class PlateComponent(ClampedComponent):
         ... )
     """
 
-    def __init__(self, thickness: Quantity, material: Material) ->None:
+    def __init__(self, thickness: Quantity, material: Material, **kwargs) ->None:
         """Initialize a new PlateComponent instance.
 
-    Args:
-        thickness: The thickness of the plate (length units)
-        material: Reference to the plate material
+        Args:
+            thickness: The thickness of the plate (length units)
+            material: Reference to the plate material
+            **kwargs: Additional arguments passed to parent class
 
-    Raises:
-        ValueError: If thickness is invalid or material reference is missing
-    """
-        super().__init__(material=material)
-        self._thickness = thickness
+        Raises:
+            ValueError: If thickness is invalid or material reference is missing
+        """
+        self._thickness = thickness  # Set thickness before parent init might need it
+        super().__init__(material=material, **kwargs)
         self.validate_geometry()
 
     @property
@@ -209,20 +217,31 @@ class PlateComponent(ClampedComponent):
         self._thickness = value
         self.validate_geometry()
 
-    def validate_geometry(self) ->None:
+    def validate_geometry(self) -> bool:
         """Validate the plate configuration.
 
         Checks:
         - Thickness is positive
+        - Thickness has valid units
+
+        Returns:
+            True if geometry is valid
 
         Raises:
             ValueError: If any validation check fails
         """
         if not isinstance(self._thickness, Quantity):
             raise ValueError('Thickness must be a quantity with units')
-        thickness_mm = self._thickness.to('mm').magnitude
+            
+        try:
+            thickness_mm = self._thickness.to('mm').magnitude
+        except:
+            raise ValueError('Thickness must have valid length units')
+            
         if thickness_mm <= 0:
             raise ValueError('Thickness must be positive')
+            
+        return True
 
 
 __all__ = ['ClampedComponent', 'Washer', 'PlateComponent']

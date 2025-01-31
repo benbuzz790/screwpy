@@ -1,8 +1,9 @@
-﻿"""Tests for the BaseComponent class."""
+"""Tests for the BaseComponent class."""
 
 import unittest
 from components.base_component import BaseComponent
 from materials.material import Material
+from tests.test_material import create_test_material
 from units_config import ureg, Quantity
 
 
@@ -26,7 +27,7 @@ class TestBaseComponent(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
-        self.material = TestMaterial('Test Material', {'density': 7.85 * ureg('g/cm^3')})
+        self.material = create_test_material("Test Material")
         self.length = 10 * ureg.mm
         self.component = ConcreteComponent(self.material, self.length)
 
@@ -121,21 +122,3 @@ class TestBaseComponent(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-class TestMaterial(Material):
-    """Concrete Material implementation for testing."""
-    
-    def __init__(self, name: str, properties: dict):
-        """Initialize test material.
-        
-        Args:
-            name: Material name
-            properties: Dictionary of material properties
-        """
-        super().__init__()
-        self._name = name
-        if 'density' in properties:
-            self.density = properties['density']
-            
-    def identify(self) -> str:
-        """Return material identifier."""
-        return self._name

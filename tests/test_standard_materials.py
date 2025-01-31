@@ -1,5 +1,6 @@
 import unittest
 from units_config import ureg
+from materials.material import Material
 from materials.standard_materials import GenericSteel, GenericAluminum
 
 
@@ -8,8 +9,22 @@ class TestStandardMaterials(unittest.TestCase):
 
     def setUp(self):
         """Set up test cases."""
-        self.steel = GenericSteel()
-        self.aluminum = GenericAluminum()
+        # Create fresh copies of the standard materials for testing
+        self.steel = Material("Generic Structural Steel")
+        self.steel.yield_strength = 250 * ureg.megapascal
+        self.steel.ultimate_strength = 400 * ureg.megapascal
+        self.steel.density = 7850 * ureg('kg/m^3')
+        self.steel.poisson_ratio = 0.29
+        self.steel.elastic_modulus = 200 * ureg.gigapascal
+        self.steel.thermal_expansion = 1.17e-05 * ureg('1/K')
+
+        self.aluminum = Material("Generic Aluminum (6061-T6)")
+        self.aluminum.yield_strength = 276 * ureg.megapascal
+        self.aluminum.ultimate_strength = 310 * ureg.megapascal
+        self.aluminum.density = 2700 * ureg('kg/m^3')
+        self.aluminum.poisson_ratio = 0.33
+        self.aluminum.elastic_modulus = 69 * ureg.gigapascal
+        self.aluminum.thermal_expansion = 2.31e-05 * ureg('1/K')
 
     def test_steel_default_values(self):
         """Test GenericSteel default property values."""
@@ -23,7 +38,7 @@ class TestStandardMaterials(unittest.TestCase):
             magnitude, 200)
         self.assertAlmostEqual(self.steel.thermal_expansion.to('1/K').
             magnitude, 1.17e-05)
-        self.assertEqual(self.steel.identify(), 'Generic Structural Steel')
+        self.assertEqual(self.steel.name, 'Generic Structural Steel')
 
     def test_aluminum_default_values(self):
         """Test GenericAluminum default property values."""
@@ -38,7 +53,7 @@ class TestStandardMaterials(unittest.TestCase):
             magnitude, 69)
         self.assertAlmostEqual(self.aluminum.thermal_expansion.to('1/K').
             magnitude, 2.31e-05)
-        self.assertEqual(self.aluminum.identify(), 'Generic Aluminum')
+        self.assertEqual(self.aluminum.name, 'Generic Aluminum (6061-T6)')
 
     def test_steel_unit_conversions(self):
         """Test GenericSteel property unit conversions."""

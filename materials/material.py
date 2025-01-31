@@ -1,23 +1,21 @@
-from abc import ABC, abstractmethod
 from typing import Optional
-import pint
-from units_config import ureg
-from typing import Dict, Any
 from units_config import ureg, Quantity
 
 
+class Material:
+    """A class representing material properties for structural analysis.
 
-
-class Material(ABC):
-    """Abstract base class for all materials in the system.
-
-    This class provides the foundation for all material definitions, ensuring proper
+    This class provides the foundation for material definitions, ensuring proper
     unit handling and validation of material properties. All properties use pint units
     and support both imperial and metric systems.
+
+    Args:
+        name (str): Material name or specification (e.g. "ASTM A36 Steel", "6061-T6 Aluminum")
     """
 
-    def __init__(self):
-        """Initialize a new Material instance with None values."""
+    def __init__(self, name: str):
+        """Initialize a new Material instance with a name."""
+        self._name = name
         self._yield_strength: Optional[Quantity] = None
         self._ultimate_strength: Optional[Quantity] = None
         self._density: Optional[Quantity] = None
@@ -25,19 +23,22 @@ class Material(ABC):
         self._elastic_modulus: Optional[Quantity] = None
         self._thermal_expansion: Optional[Quantity] = None
 
+    @property
+    def name(self) -> str:
+        """Get the material name/specification."""
+        return self._name
+
+    @name.setter
+    def name(self, value: str):
+        """Set the material name/specification."""
+        if not isinstance(value, str):
+            raise TypeError('Name must be a string')
+        if not value.strip():
+            raise ValueError('Name cannot be empty')
+        self._name = value.strip()
+
     def _validate_stress_units(self, value: Quantity, name: str) ->Quantity:
-        """Validate that a value has stress units and convert to Pa.
-
-        Args:
-            value: Value to validate
-            name: Name of the property for error messages
-
-        Returns:
-            Quantity: Value converted to Pa
-
-        Raises:
-            TypeError: If value is not a Quantity or has wrong units
-        """
+        """Validate that a value has stress units and convert to Pa."""
         if not isinstance(value, Quantity):
             raise TypeError(f'{name} must be a Quantity with stress units')
         try:
@@ -46,15 +47,7 @@ class Material(ABC):
             raise TypeError(f'{name} must have stress units')
 
     def _validate_positive(self, value: Quantity, name: str) ->None:
-        """Validate that a value is positive.
-
-        Args:
-            value: Value to validate
-            name: Name of the property for error messages
-
-        Raises:
-            ValueError: If value is not positive
-        """
+        """Validate that a value is positive."""
         if value.magnitude <= 0:
             raise ValueError(f'{name} must be positive')
 
@@ -162,8 +155,7 @@ class Material(ABC):
         """Set the material coefficient of thermal expansion."""
         if not isinstance(value, Quantity):
             raise TypeError(
-                'Thermal expansion coefficient must be a Quantity with 1/temperature units'
-                )
+                'Thermal expansion coefficient must be a Quantity with 1/temperature units')
         try:
             value_k = value.to('1/K')
         except:
@@ -173,7 +165,31 @@ class Material(ABC):
             raise ValueError('Thermal expansion coefficient must be positive')
         self._thermal_expansion = value_k
 
-    @abstractmethod
-    def identify(self) ->str:
-        """Return a string identifying the specific material."""
-        pass
+    def calculate_shear_strength(self, ultimate: bool = True) -> Quantity:
+        """Calculate shear strength using von Mises criterion.
+
+        Args:
+            ultimate: If True, uses ultimate_strength, otherwise uses yield_strength
+
+        Returns:
+            Quantity: Shear strength (0.577 * tensile strength per von Mises)
+
+        Raises:
+            ValueError: If required strength property is not set
+        """
+        if ultimate:
+            base_strength = self.ultimate_strength
+        else:
+            base_strength = self.yield_strength
+
+        return 0.577 * base_strength  # von Mises criterion
+
+    @property
+    def ultimate_shear_strength(self) -> Quantity:
+        """Get the material ultimate shear strength using von Mises criterion."""
+        return self.calculate_shear_strength(ultimate=True)
+
+    @property
+    def yield_shear_strength(self) -> Quantity:
+        """Get the material yield shear strength using von Mises criterion."""
+        return self.calculate_shear_strength(ultimate=False)

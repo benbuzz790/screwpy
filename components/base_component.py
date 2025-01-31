@@ -71,16 +71,17 @@ class BaseComponent(ABC):
         specific dimensional constraints.
 
         Returns:
-            True if geometry is valid, False otherwise
+            True if geometry is valid
 
         Raises:
+            ValueError: If geometry is invalid, with specific reason
             NotImplementedError: If not implemented by subclass
 
         Example:
             >>> bolt.validate_geometry()  # checks length > 0
             True
         """
-        pass
+        raise NotImplementedError("validate_geometry must be implemented by subclass")
 
     def convert_length(self, value: Quantity, target_unit: str) ->Quantity:
         """Convert a length value to the specified unit.

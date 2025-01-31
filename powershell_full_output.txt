@@ -3,151 +3,115 @@ platform win32 -- Python 3.12.8, pytest-8.3.4, pluggy-1.5.0 -- C:\Users\benbu\Ap
 cachedir: .pytest_cache
 rootdir: C:\Users\benbu\Code\temp3
 configfile: pytest.ini
-testpaths: tests
 plugins: anyio-4.7.0, asyncio-0.23.6, cov-6.0.0, timeout-2.3.1, requests-mock-1.12.1
 asyncio: mode=Mode.STRICT
-collecting ... collected 82 items
+collecting ... collected 8 items
 
-tests/test_base_component.py::TestBaseComponent::test_convert_length PASSED [  1%]
-tests/test_base_component.py::TestBaseComponent::test_convert_length_errors PASSED [  2%]
-tests/test_base_component.py::TestBaseComponent::test_init PASSED        [  3%]
-tests/test_base_component.py::TestBaseComponent::test_init_invalid_material PASSED [  4%]
-tests/test_base_component.py::TestBaseComponent::test_material_property PASSED [  6%]
-tests/test_base_component.py::TestBaseComponent::test_validate_geometry PASSED [  7%]
-tests/test_base_component.py::TestBaseComponent::test_validate_length PASSED [  8%]
-tests/test_base_component.py::TestBaseComponent::test_validate_length_errors PASSED [  9%]
-tests/test_clamped_components.py::TestWasher::test_invalid_dimensions PASSED [ 10%]
-tests/test_clamped_components.py::TestWasher::test_invalid_material PASSED [ 12%]
-tests/test_clamped_components.py::TestWasher::test_property_access PASSED [ 13%]
-tests/test_clamped_components.py::TestWasher::test_unit_conversion PASSED [ 14%]
-tests/test_clamped_components.py::TestWasher::test_valid_creation PASSED [ 15%]
-tests/test_clamped_components.py::TestPlateComponent::test_invalid_dimensions PASSED [ 17%]
-tests/test_clamped_components.py::TestPlateComponent::test_invalid_material PASSED [ 18%]
-tests/test_clamped_components.py::TestPlateComponent::test_property_access PASSED [ 19%]
-tests/test_clamped_components.py::TestPlateComponent::test_unit_conversion PASSED [ 20%]
-tests/test_clamped_components.py::TestPlateComponent::test_valid_creation PASSED [ 21%]
-tests/test_junction.py::TestJunction::test_add_remove_clamped_component PASSED [ 23%]
-tests/test_junction.py::TestJunction::test_component_updates PASSED      [ 24%]
-tests/test_junction.py::TestJunction::test_grip_length PASSED            [ 25%]
-tests/test_junction.py::TestJunction::test_insufficient_fastener_length PASSED [ 26%]
-tests/test_junction.py::TestJunction::test_invalid_assembly PASSED       [ 28%]
-tests/test_junction.py::TestJunction::test_junction_creation PASSED      [ 29%]
-tests/test_junction.py::TestJunction::test_metric_units SKIPPED (Sta...) [ 30%]
-tests/test_junction.py::TestJunction::test_minimum_components SKIPPED    [ 31%]
-tests/test_junction.py::TestJunction::test_stack_up_thickness SKIPPED    [ 32%]
-tests/test_junction.py::TestJunction::test_threaded_plate SKIPPED (S...) [ 34%]
-tests/test_material.py::TestMaterial::test_density PASSED                [ 35%]
-tests/test_material.py::TestMaterial::test_elastic_modulus PASSED        [ 36%]
-tests/test_material.py::TestMaterial::test_identify PASSED               [ 37%]
-tests/test_material.py::TestMaterial::test_poisson_ratio PASSED          [ 39%]
-tests/test_material.py::TestMaterial::test_property_access_before_setting PASSED [ 40%]
-tests/test_material.py::TestMaterial::test_thermal_expansion PASSED      [ 41%]
-tests/test_material.py::TestMaterial::test_ultimate_strength PASSED      [ 42%]
-tests/test_material.py::TestMaterial::test_yield_strength PASSED         [ 43%]
-tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_default_values PASSED [ 45%]
-tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_unit_conversions PASSED [ 46%]
-tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_validation PASSED [ 47%]
-tests/test_standard_materials.py::TestStandardMaterials::test_property_modification PASSED [ 48%]
-tests/test_standard_materials.py::TestStandardMaterials::test_steel_default_values PASSED [ 50%]
-tests/test_standard_materials.py::TestStandardMaterials::test_steel_unit_conversions PASSED [ 51%]
-tests/test_standard_materials.py::TestStandardMaterials::test_steel_validation PASSED [ 52%]
-tests/test_standard_materials.py::TestStandardMaterials::test_unit_compatibility PASSED [ 53%]
-tests/test_thread_utils.py::TestThreadUtils::test_invalid_specifications PASSED [ 54%]
-tests/test_thread_utils.py::TestThreadUtils::test_parse_thread_specification_imperial PASSED [ 56%]
-tests/test_thread_utils.py::TestThreadUtils::test_parse_thread_specification_metric PASSED [ 57%]
-tests/test_thread_utils.py::TestThreadUtils::test_thread_calculations_imperial PASSED [ 58%]
-tests/test_thread_utils.py::TestThreadUtils::test_thread_calculations_metric PASSED [ 59%]
-tests/test_thread_utils.py::TestThreadUtils::test_thread_compatibility PASSED [ 60%]
-tests/test_thread_utils.py::TestThreadUtils::test_thread_series_validation PASSED [ 62%]
-tests/test_thread_utils.py::TestThreadUtils::test_validate_thread_format PASSED [ 63%]
-tests/test_threaded_components.py::TestFastener::test_fastener_creation PASSED [ 64%]
-tests/test_threaded_components.py::TestFastener::test_invalid_dimensions PASSED [ 65%]
-tests/test_threaded_components.py::TestFastener::test_property_setters FAILED [ 67%]
-tests/test_threaded_components.py::TestFastener::test_unit_conversion PASSED [ 68%]
-tests/test_threaded_components.py::TestNut::test_invalid_dimensions PASSED [ 69%]
-tests/test_threaded_components.py::TestNut::test_nut_creation PASSED     [ 70%]
-tests/test_threaded_components.py::TestNut::test_property_setters PASSED [ 71%]
-tests/test_threaded_components.py::TestNut::test_unit_conversion PASSED  [ 73%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_imperial_units PASSED [ 74%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_initialization PASSED [ 75%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_initialization_with_defaults PASSED [ 76%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_initialization_with_numeric_values PASSED [ 78%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_invalid_clearance_hole PASSED [ 79%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_invalid_property_values PASSED [ 80%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_invalid_thread_spec PASSED [ 81%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_invalid_threaded_length PASSED [ 82%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_property_setters PASSED [ 84%]
-tests/test_threaded_plate.py::TestThreadedPlate::test_unit_conversion SKIPPED [ 85%]
-tests/test_unit_utils.py::TestUnitUtils::test_are_units_compatible PASSED [ 86%]
-tests/test_unit_utils.py::TestUnitUtils::test_compare_with_tolerance PASSED [ 87%]
-tests/test_unit_utils.py::TestUnitUtils::test_format_quantity PASSED     [ 89%]
-tests/test_unit_utils.py::TestUnitUtils::test_format_with_units PASSED   [ 90%]
-tests/test_unit_utils.py::TestUnitUtils::test_is_valid_unit_type PASSED  [ 91%]
-tests/test_unit_utils.py::TestUnitUtils::test_safe_add PASSED            [ 92%]
-tests/test_unit_utils.py::TestUnitUtils::test_safe_divide PASSED         [ 93%]
-tests/test_unit_utils.py::TestUnitUtils::test_safe_multiply PASSED       [ 95%]
-tests/test_unit_utils.py::TestUnitUtils::test_standardize_units PASSED   [ 96%]
-tests/test_unit_utils.py::TestUnitUtils::test_to_imperial PASSED         [ 97%]
-tests/test_unit_utils.py::TestUnitUtils::test_to_metric PASSED           [ 98%]
-tests/test_unit_utils.py::TestUnitUtils::test_validate_unit_dimension PASSED [100%]
+tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_default_values FAILED [ 12%]
+tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_unit_conversions FAILED [ 25%]
+tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_validation FAILED [ 37%]
+tests/test_standard_materials.py::TestStandardMaterials::test_property_modification FAILED [ 50%]
+tests/test_standard_materials.py::TestStandardMaterials::test_steel_default_values FAILED [ 62%]
+tests/test_standard_materials.py::TestStandardMaterials::test_steel_unit_conversions FAILED [ 75%]
+tests/test_standard_materials.py::TestStandardMaterials::test_steel_validation FAILED [ 87%]
+tests/test_standard_materials.py::TestStandardMaterials::test_unit_compatibility FAILED [100%]
 
 ================================== FAILURES ===================================
-_____________________ TestFastener.test_property_setters ______________________
+_____________ TestStandardMaterials.test_aluminum_default_values ______________
 
-self = <temp3.tests.test_threaded_components.TestFastener testMethod=test_property_setters>
+self = <temp3.tests.test_standard_materials.TestStandardMaterials testMethod=test_aluminum_default_values>
 
-    def test_property_setters(self):
-        """Test property setters with validation."""
-        self.fastener.length = 2.5 * ureg.inch
-        self.assertEqual(self.fastener.length, 2.5 * ureg.inch)
-        self.fastener.is_flat = True
-        self.assertTrue(self.fastener.is_flat)
-        with self.assertRaises(ValueError):
->           self.fastener.head_diameter = 0.1 * ureg.inch
+    def setUp(self):
+        """Set up test cases."""
+        # Create fresh copies of the standard materials for testing
+>       self.steel = Material("Generic Structural Steel")
+E       NameError: name 'Material' is not defined
 
-tests\test_threaded_components.py:59: 
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-components\threaded_components.py:116: in head_diameter
-    self.validate_geometry()
-_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\test_standard_materials.py:12: NameError
+____________ TestStandardMaterials.test_aluminum_unit_conversions _____________
 
-    def validate_geometry(self) -> bool:
-        """Validate fastener geometry.
-    
-        Returns:
-            True if geometry is valid
-    
-        Raises:
-            ValueError: If geometry is invalid
-        """
->       if (self._length.magnitude <= 0 or self._head_diameter.magnitude <= 0 or
-            self._head_height.magnitude <= 0):
-E           TypeError: '<=' not supported between instances of 'property' and 'int'
+self = <temp3.tests.test_standard_materials.TestStandardMaterials testMethod=test_aluminum_unit_conversions>
 
-components\threaded_components.py:88: TypeError
-============================== warnings summary ===============================
-units_config\__init__.py:38
-  C:\Users\benbu\Code\temp3\units_config\__init__.py:38: DeprecationWarning: This function will be removed in future versions of pint.
-  Use ureg.formatter.default_format
-    ureg.default_format = '~P'  # Compact pretty format
+    def setUp(self):
+        """Set up test cases."""
+        # Create fresh copies of the standard materials for testing
+>       self.steel = Material("Generic Structural Steel")
+E       NameError: name 'Material' is not defined
 
-tests\test_base_component.py:124
-  C:\Users\benbu\Code\temp3\tests\test_base_component.py:124: PytestCollectionWarning: cannot collect test class 'TestMaterial' because it has a __init__ constructor (from: tests/test_base_component.py)
-    class TestMaterial(Material):
+tests\test_standard_materials.py:12: NameError
+_______________ TestStandardMaterials.test_aluminum_validation ________________
 
-tests\test_base_component.py:124
-  C:\Users\benbu\Code\temp3\tests\test_base_component.py:124: PytestCollectionWarning: cannot collect test class 'TestMaterial' because it has a __init__ constructor (from: tests/test_clamped_components.py)
-    class TestMaterial(Material):
+self = <temp3.tests.test_standard_materials.TestStandardMaterials testMethod=test_aluminum_validation>
 
-tests\test_base_component.py:124
-  C:\Users\benbu\Code\temp3\tests\test_base_component.py:124: PytestCollectionWarning: cannot collect test class 'TestMaterial' because it has a __init__ constructor (from: tests/test_junction.py)
-    class TestMaterial(Material):
+    def setUp(self):
+        """Set up test cases."""
+        # Create fresh copies of the standard materials for testing
+>       self.steel = Material("Generic Structural Steel")
+E       NameError: name 'Material' is not defined
 
-tests\test_base_component.py:124
-  C:\Users\benbu\Code\temp3\tests\test_base_component.py:124: PytestCollectionWarning: cannot collect test class 'TestMaterial' because it has a __init__ constructor (from: tests/test_threaded_components.py)
-    class TestMaterial(Material):
+tests\test_standard_materials.py:12: NameError
+______________ TestStandardMaterials.test_property_modification _______________
 
--- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+self = <temp3.tests.test_standard_materials.TestStandardMaterials testMethod=test_property_modification>
+
+    def setUp(self):
+        """Set up test cases."""
+        # Create fresh copies of the standard materials for testing
+>       self.steel = Material("Generic Structural Steel")
+E       NameError: name 'Material' is not defined
+
+tests\test_standard_materials.py:12: NameError
+_______________ TestStandardMaterials.test_steel_default_values _______________
+
+self = <temp3.tests.test_standard_materials.TestStandardMaterials testMethod=test_steel_default_values>
+
+    def setUp(self):
+        """Set up test cases."""
+        # Create fresh copies of the standard materials for testing
+>       self.steel = Material("Generic Structural Steel")
+E       NameError: name 'Material' is not defined
+
+tests\test_standard_materials.py:12: NameError
+______________ TestStandardMaterials.test_steel_unit_conversions ______________
+
+self = <temp3.tests.test_standard_materials.TestStandardMaterials testMethod=test_steel_unit_conversions>
+
+    def setUp(self):
+        """Set up test cases."""
+        # Create fresh copies of the standard materials for testing
+>       self.steel = Material("Generic Structural Steel")
+E       NameError: name 'Material' is not defined
+
+tests\test_standard_materials.py:12: NameError
+_________________ TestStandardMaterials.test_steel_validation _________________
+
+self = <temp3.tests.test_standard_materials.TestStandardMaterials testMethod=test_steel_validation>
+
+    def setUp(self):
+        """Set up test cases."""
+        # Create fresh copies of the standard materials for testing
+>       self.steel = Material("Generic Structural Steel")
+E       NameError: name 'Material' is not defined
+
+tests\test_standard_materials.py:12: NameError
+________________ TestStandardMaterials.test_unit_compatibility ________________
+
+self = <temp3.tests.test_standard_materials.TestStandardMaterials testMethod=test_unit_compatibility>
+
+    def setUp(self):
+        """Set up test cases."""
+        # Create fresh copies of the standard materials for testing
+>       self.steel = Material("Generic Structural Steel")
+E       NameError: name 'Material' is not defined
+
+tests\test_standard_materials.py:12: NameError
 =========================== short test summary info ===========================
-FAILED tests/test_threaded_components.py::TestFastener::test_property_setters
-============= 1 failed, 76 passed, 5 skipped, 5 warnings in 1.40s =============
+FAILED tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_default_values - NameError: name 'Material' is not defined
+FAILED tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_unit_conversions - NameError: name 'Material' is not defined
+FAILED tests/test_standard_materials.py::TestStandardMaterials::test_aluminum_validation - NameError: name 'Material' is not defined
+FAILED tests/test_standard_materials.py::TestStandardMaterials::test_property_modification - NameError: name 'Material' is not defined
+FAILED tests/test_standard_materials.py::TestStandardMaterials::test_steel_default_values - NameError: name 'Material' is not defined
+FAILED tests/test_standard_materials.py::TestStandardMaterials::test_steel_unit_conversions - NameError: name 'Material' is not defined
+FAILED tests/test_standard_materials.py::TestStandardMaterials::test_steel_validation - NameError: name 'Material' is not defined
+FAILED tests/test_standard_materials.py::TestStandardMaterials::test_unit_compatibility - NameError: name 'Material' is not defined
+============================== 8 failed in 0.90s ==============================

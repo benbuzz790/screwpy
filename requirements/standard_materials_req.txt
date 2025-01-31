@@ -1,7 +1,7 @@
 # Requirements for standard_materials.py
 
 ## Purpose
-Implement concrete material classes for GenericSteel and GenericAluminum with standard material properties.
+Create pre-configured Material instances for standard materials with common property values.
 
 ## Top-Level Requirements Flow-Down
 
@@ -18,7 +18,7 @@ Implement concrete material classes for GenericSteel and GenericAluminum with st
 4. Must maintain separation between data and analysis logic
 
 ### From Core Functionality Requirements
-1. Must implement two concrete material classes:
+1. Must provide two pre-configured Material instances:
    - GenericSteel
    - GenericAluminum
 2. Must provide standard material properties
@@ -27,14 +27,13 @@ Implement concrete material classes for GenericSteel and GenericAluminum with st
 ## Specific Requirements
 
 ### Common Implementation Requirements
-1. Both classes must:
-   - Inherit from Material base class
-   - Implement all abstract methods
-   - Provide all required properties with units
-   - Include proper validation
-   - Support unit conversion
+1. Both instances must:
+   - Be created with descriptive names
+   - Have all properties initialized with standard values
+   - Use proper units for all properties
+   - Support property modification after creation
 
-### GenericSteel Class
+### GenericSteel Instance
 1. Required Properties (with standard steel values):
    - Yield strength (~250 MPa / 36 ksi)
    - Ultimate strength (~400 MPa / 58 ksi)
@@ -49,7 +48,7 @@ Implement concrete material classes for GenericSteel and GenericAluminum with st
    - Must maintain property constraints
    - Must include proper documentation of standard values
 
-### GenericAluminum Class
+### GenericAluminum Instance
 1. Required Properties (with standard aluminum values):
    - Yield strength (~276 MPa / 40 ksi)
    - Ultimate strength (~310 MPa / 45 ksi)
@@ -82,7 +81,7 @@ Implement concrete material classes for GenericSteel and GenericAluminum with st
 ### Documentation
 1. Must include docstrings for:
    - The module
-   - Each class
+   - Each instance
    - Each method
    - Each property
 2. Must include usage examples in docstrings
@@ -125,6 +124,7 @@ Implement concrete material classes for GenericSteel and GenericAluminum with st
 
 ### Implementation Notes
 1. Must provide clear documentation of standard value sources
-2. Must implement proper property validation
+2. Must create instances with proper names and values
 3. Must maintain material-specific constraints
-4. Must support both creation with defaults and property modification
+4. Must support property modification after creation
+5. Must ensure instances are importable and reusable

@@ -1,216 +1,163 @@
 from typing import Optional, Union
-from pint import Quantity
 from units_config import ureg
 from materials.material import Material
-from components.clamped_components import PlateComponent
-from components.threaded_components import ThreadedComponent
-from utils.thread_utils import is_valid_thread_spec, calculate_pitch_diameter
-from components.base_component import BaseComponent
+from .base_component import BaseComponent
+from .clamped_components import PlateComponent
+from .threaded_components import ThreadedComponent
+from utils.thread_utils import parse_thread_specification, calculate_pitch_diameter
 
+Quantity = ureg.Quantity
 
 class ThreadedPlate(ThreadedComponent, PlateComponent):
-    """A plate component with both clamped and threaded characteristics.
-
-    Combines properties of a plate component with threaded features, supporting
-    both metric and imperial units through pint unit handling.
-
-    Attributes:
-        thickness (Quantity): The thickness of the plate
-        material (Material): Reference to the plate material
-        thread_spec (str): Thread specification (e.g., "1/4-20 UNC")
-        pitch_diameter (Quantity): Thread pitch diameter with length units
-        threaded_length (Quantity): Length of threaded section with length units
-        clearance_hole_diameter (Quantity): Diameter of clearance hole with length units
-        thread_location_x (Quantity): X coordinate of thread location
-        thread_location_y (Quantity): Y coordinate of thread location
-    """
-
-    def __init__(self, thickness: Union[Quantity, float], material: Material, 
-                 thread_spec: str, threaded_length: Union[Quantity, float],
-                 clearance_hole_diameter: Union[Quantity, float], 
-                 thread_location_x: Union[Quantity, float]=None, 
-                 thread_location_y: Union[Quantity, float]=None) -> None:
-        """Initialize a ThreadedPlate instance.
-
-        Args:
-            thickness: The thickness of the plate (with units if Quantity)
-            material: Reference to the plate material
-            thread_spec: Thread specification string (e.g., "1/4-20 UNC")
-            threaded_length: Length of threaded section (with units if Quantity)
-            clearance_hole_diameter: Diameter of clearance hole (with units if Quantity)
-            thread_location_x: X coordinate of thread location (with units if Quantity)
-            thread_location_y: Y coordinate of thread location (with units if Quantity)
-
-        Raises:
-            ValueError: If dimensions are invalid
-            ValueError: If thread specification is invalid
-            ValueError: If threaded length exceeds plate thickness
-            ValueError: If clearance hole diameter is less than pitch diameter
-            TypeError: If material is invalid type
-        """
-        # Initialize base class
-        BaseComponent.__init__(self, material=material)  # Only initialize material once
-        
-        # Set up threaded component attributes
-        if not is_valid_thread_spec(thread_spec):
-            raise ValueError(f'Invalid thread specification: {thread_spec}')
-        self._thread_spec = thread_spec
-        
-        # Convert numeric values to Quantities
+    def __init__(self, material: Material, thickness: Union[Quantity, float], thread_spec: str,
+                 threaded_length: Union[Quantity, float], clearance_hole_diameter: Union[Quantity, float],
+                 thread_location_x: Optional[Union[Quantity, float]] = None,
+                 thread_location_y: Optional[Union[Quantity, float]] = None):
+        # Convert numeric values to quantities
         if isinstance(thickness, (int, float)):
-            thickness = ureg.Quantity(thickness, 'mm')
+            thickness = thickness * ureg.mm
         if isinstance(threaded_length, (int, float)):
-            threaded_length = ureg.Quantity(threaded_length, 'mm')
+            threaded_length = threaded_length * ureg.mm
         if isinstance(clearance_hole_diameter, (int, float)):
-            clearance_hole_diameter = ureg.Quantity(clearance_hole_diameter, 'mm')
-            
-        # Validate and set dimensions
-        if not isinstance(thickness, Quantity) or thickness.magnitude <= 0:
-            raise ValueError('Thickness must be a positive quantity with units')
-        self._thickness = thickness
-        
-        if not isinstance(threaded_length, Quantity) or threaded_length.magnitude <= 0:
-            raise ValueError('Threaded length must be a positive quantity with units')
-        self._threaded_length = threaded_length
-        
-        if not isinstance(clearance_hole_diameter, Quantity) or clearance_hole_diameter.magnitude <= 0:
-            raise ValueError('Clearance hole diameter must be a positive quantity with units')
-        self._clearance_hole_diameter = clearance_hole_diameter
-        
-        # Calculate pitch diameter after thread spec is validated
-        self._pitch_diameter = calculate_pitch_diameter(thread_spec)
-        
-        # Handle optional thread locations
-        if thread_location_x is None:
-            thread_location_x = 0
-        if thread_location_y is None:
-            thread_location_y = 0
-            
+            clearance_hole_diameter = clearance_hole_diameter * ureg.mm
         if isinstance(thread_location_x, (int, float)):
-            self._thread_location_x = ureg.Quantity(thread_location_x, 'mm')
-        else:
-            self._thread_location_x = thread_location_x
-            
+            thread_location_x = thread_location_x * ureg.mm
         if isinstance(thread_location_y, (int, float)):
-            self._thread_location_y = ureg.Quantity(thread_location_y, 'mm')
-        else:
-            self._thread_location_y = thread_location_y
-            
-        # Validate all attributes after they're set up
-        self.validate_geometry()
+            thread_location_y = thread_location_y * ureg.mm
 
-    @property
-    def thickness(self) -> Quantity:
-        """Get the thickness of the plate."""
-        return self._thickness
+        # Set default locations if None
+        if thread_location_x is None:
+            thread_location_x = 0 * ureg.mm
+        if thread_location_y is None:
+            thread_location_y = 0 * ureg.mm
 
-    @thickness.setter
-    def thickness(self, value: Quantity) -> None:
-        """Set the thickness of the plate.
-        
-        Args:
-            value: New thickness value (with units if Quantity)
-            
-        Raises:
-            ValueError: If value is not positive
-        """
-        if isinstance(value, (int, float)):
-            value = ureg.Quantity(value, 'mm')
-        if not isinstance(value, Quantity) or value.magnitude <= 0:
-            raise ValueError('Thickness must be a positive quantity with units')
-        self._thickness = value
-        self.validate_geometry()
+        # Initialize BaseComponent just once
+        BaseComponent.__init__(self, material=material)
 
-    @property
-    def threaded_length(self) -> Quantity:
-        """Get the length of the threaded section."""
-        return self._threaded_length
+        # Initialize ThreadedComponent attributes
+        self._thread_spec = thread_spec
+        thread_info = parse_thread_specification(thread_spec)
+        self._nominal_diameter = thread_info.nominal_diameter
+        self._pitch_diameter = calculate_pitch_diameter(thread_spec)
+        self._is_metric = thread_info.is_metric
 
-    @threaded_length.setter
-    def threaded_length(self, value: Quantity) -> None:
-        """Set the length of the threaded section.
-        
-        Args:
-            value: New threaded length value (with units if Quantity)
-            
-        Raises:
-            ValueError: If value is not positive or exceeds plate thickness
-        """
-        if isinstance(value, (int, float)):
-            value = ureg.Quantity(value, 'mm')
-        if not isinstance(value, Quantity) or value.magnitude <= 0:
-            raise ValueError('Threaded length must be a positive quantity with units')
-        self._threaded_length = value
-        self.validate_geometry()
+        # Initialize all attributes
+        self._thickness = thickness
+        self._threaded_length = threaded_length
+        self._clearance_hole_diameter = clearance_hole_diameter
+        self._thread_location_x = thread_location_x
+        self._thread_location_y = thread_location_y
 
-    @property
-    def clearance_hole_diameter(self) -> Quantity:
-        """Get the clearance hole diameter."""
-        return self._clearance_hole_diameter
-
-    @clearance_hole_diameter.setter
-    def clearance_hole_diameter(self, value: Quantity) -> None:
-        """Set the clearance hole diameter.
-        
-        Args:
-            value: New clearance hole diameter value (with units if Quantity)
-            
-        Raises:
-            ValueError: If value is not positive or less than pitch diameter
-        """
-        if isinstance(value, (int, float)):
-            value = ureg.Quantity(value, 'mm')
-        if not isinstance(value, Quantity) or value.magnitude <= 0:
-            raise ValueError('Clearance hole diameter must be a positive quantity with units')
-        self._clearance_hole_diameter = value
-        self.validate_geometry()
-
-    @property
-    def thread_location_x(self) -> Quantity:
-        """Get the X coordinate of the thread location."""
-        return self._thread_location_x
-
-    @thread_location_x.setter
-    def thread_location_x(self, value: Quantity) -> None:
-        """Set the X coordinate of the thread location."""
-        if isinstance(value, (int, float)):
-            value = ureg.Quantity(value, 'mm')
-        if not isinstance(value, Quantity):
-            raise ValueError('Thread location X must be a quantity with units')
-        self._thread_location_x = value
-        self.validate_geometry()
-
-    @property
-    def thread_location_y(self) -> Quantity:
-        """Get the Y coordinate of the thread location."""
-        return self._thread_location_y
-
-    @thread_location_y.setter
-    def thread_location_y(self, value: Quantity) -> None:
-        """Set the Y coordinate of the thread location."""
-        if isinstance(value, (int, float)):
-            value = ureg.Quantity(value, 'mm')
-        if not isinstance(value, Quantity):
-            raise ValueError('Thread location Y must be a quantity with units')
-        self._thread_location_y = value
+        # Validate the complete geometry - will raise ValueError if invalid
         self.validate_geometry()
 
     def validate_geometry(self) -> None:
-        """Validate the threaded plate configuration.
+        # Validate basic dimensions
+        if not isinstance(self._thickness, Quantity) or self._thickness <= 0 * ureg.mm:
+            raise ValueError("Thickness must be positive")
+        if not isinstance(self._threaded_length, Quantity) or self._threaded_length <= 0 * ureg.mm:
+            raise ValueError("Threaded length must be positive")
+        if not isinstance(self._clearance_hole_diameter, Quantity) or self._clearance_hole_diameter <= 0 * ureg.mm:
+            raise ValueError("Clearance hole diameter must be positive")
 
-        Checks:
-        - All dimensions are positive (from PlateComponent)
-        - Material reference is valid (from BaseComponent)
-        - Thread specification is valid (from ThreadedComponent)
-        - Threaded length does not exceed plate thickness
-        - Clearance hole diameter is greater than pitch diameter
-        - Thread location is valid
+        # Validate thread spec
+        thread_info = parse_thread_specification(self._thread_spec)
+        if thread_info is None:
+            raise ValueError("Invalid thread specification")
 
-        Raises:
-            ValueError: If any validation check fails
-        """
-        # Cross-property validations
-        if self.threaded_length > self.thickness:
-            raise ValueError('Threaded length cannot exceed plate thickness')
-        if self.clearance_hole_diameter <= self.pitch_diameter:
-            raise ValueError('Clearance hole diameter must be greater than pitch diameter')
+        # Validate threaded length against thickness
+        if self._threaded_length > self._thickness:
+            raise ValueError(f"Threaded length {self._threaded_length} exceeds thickness {self._thickness}")
+
+        # Validate clearance hole size against thread diameter
+        if self._clearance_hole_diameter <= self._nominal_diameter:
+            raise ValueError(f"Clearance hole diameter ({self._clearance_hole_diameter}) must be larger than thread diameter ({self._nominal_diameter})")
+        # For standard hex head bolts, head diameter is typically 1.5x nominal diameter
+        typical_head_diameter = (1.5 * self._nominal_diameter).to(ureg.mm)
+        if self._clearance_hole_diameter >= typical_head_diameter:
+            raise ValueError(f"Clearance hole diameter ({self._clearance_hole_diameter}) must be smaller than head diameter ({typical_head_diameter})")
+
+        # Validate thread locations if specified
+        if self._thread_location_x is not None:
+            if not isinstance(self._thread_location_x, Quantity):
+                raise ValueError("Thread location X must be a quantity with units")
+        if self._thread_location_y is not None:
+            if not isinstance(self._thread_location_y, Quantity):
+                raise ValueError("Thread location Y must be a quantity with units")
+
+    @property
+    def thread_location_x(self) -> Optional[Quantity]:
+        return self._thread_location_x
+
+    @thread_location_x.setter
+    def thread_location_x(self, value: Union[Quantity, float, None]) -> None:
+        if value is not None:
+            if isinstance(value, (int, float)):
+                value = value * ureg.mm
+            if not isinstance(value, Quantity):
+                raise ValueError("Thread location X must be a quantity with units")
+        old_value = self._thread_location_x
+        self._thread_location_x = value
+        try:
+            self.validate_geometry()
+        except ValueError as e:
+            self._thread_location_x = old_value  # Reset to original state
+            raise ValueError(f"Invalid thread location X: {str(e)}")
+
+    @property
+    def thread_location_y(self) -> Optional[Quantity]:
+        return self._thread_location_y
+
+    @thread_location_y.setter
+    def thread_location_y(self, value: Union[Quantity, float, None]) -> None:
+        if value is not None:
+            if isinstance(value, (int, float)):
+                value = value * ureg.mm
+            if not isinstance(value, Quantity):
+                raise ValueError("Thread location Y must be a quantity with units")
+        old_value = self._thread_location_y
+        self._thread_location_y = value
+        try:
+            self.validate_geometry()
+        except ValueError as e:
+            self._thread_location_y = old_value  # Reset to original state
+            raise ValueError(f"Invalid thread location Y: {str(e)}")
+
+    @property
+    def threaded_length(self) -> Quantity:
+        return self._threaded_length
+
+    @threaded_length.setter
+    def threaded_length(self, value: Union[Quantity, float]) -> None:
+        if isinstance(value, (int, float)):
+            value = value * ureg.mm
+        if not isinstance(value, Quantity):
+            raise ValueError("Threaded length must be a quantity with units")
+        old_value = self._threaded_length
+        self._threaded_length = value
+        try:
+            self.validate_geometry()
+        except ValueError as e:
+            self._threaded_length = old_value  # Reset to original state
+            raise ValueError(f"Invalid threaded length: {str(e)}")
+
+    @property
+    def clearance_hole_diameter(self) -> Quantity:
+        return self._clearance_hole_diameter
+
+    @clearance_hole_diameter.setter
+    def clearance_hole_diameter(self, value: Union[Quantity, float]) -> None:
+        if isinstance(value, (int, float)):
+            value = value * ureg.mm
+        if not isinstance(value, Quantity):
+            raise ValueError("Clearance hole diameter must be a quantity with units")
+        old_value = self._clearance_hole_diameter
+        self._clearance_hole_diameter = value
+        try:
+            self.validate_geometry()
+        except ValueError as e:
+            self._clearance_hole_diameter = old_value  # Reset to original state
+            raise ValueError(f"Invalid clearance hole diameter: {str(e)}")
+
+    def __str__(self):
+        return f"Threaded Plate ({self.thickness} thick, {self.thread_spec})"

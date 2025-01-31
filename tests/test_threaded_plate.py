@@ -4,15 +4,14 @@ from pint import Quantity
 from units_config import ureg
 from materials.material import Material
 from components.threaded_plate import ThreadedPlate
-from tests.test_material import ConcreteMaterial
+from tests.test_material import create_test_material
 
 class TestThreadedPlate(unittest.TestCase):
     """Test cases for the ThreadedPlate class."""
 
     def setUp(self):
         """Set up test fixtures before each test method."""
-        self.material = ConcreteMaterial()
-        self.material.yield_strength = 250 * ureg.MPa
+        self.material = create_test_material()
         self.thickness = 10 * ureg.mm
         self.thread_spec = "1/4-20 UNC"
         self.threaded_length = 8 * ureg.mm
@@ -110,14 +109,28 @@ class TestThreadedPlate(unittest.TestCase):
 
     def test_invalid_clearance_hole(self):
         """Test initialization with invalid clearance hole diameter."""
-        with self.assertRaises(ValueError):
+        # Test with hole too small (equal to thread diameter)
+        # 1/4-20 UNC has nominal diameter of 0.25 inches = 6.35mm
+        with self.assertRaises(ValueError) as cm:
             ThreadedPlate(
                 thickness=self.thickness,
                 material=self.material,
                 thread_spec=self.thread_spec,
                 threaded_length=self.threaded_length,
-                clearance_hole_diameter=4 * ureg.mm  # Too small
+                clearance_hole_diameter=6.35 * ureg.mm  # Equal to thread diameter
             )
+        self.assertIn("must be larger than thread diameter", str(cm.exception))
+
+        # Test with hole too large (equal to typical head diameter)
+        with self.assertRaises(ValueError) as cm:
+            ThreadedPlate(
+                thickness=self.thickness,
+                material=self.material,
+                thread_spec=self.thread_spec,
+                threaded_length=self.threaded_length,
+                clearance_hole_diameter=15 * ureg.mm  # Too large
+            )
+        self.assertIn("must be smaller than head diameter", str(cm.exception))
 
     def test_property_setters(self):
         """Test property setters with valid values."""
