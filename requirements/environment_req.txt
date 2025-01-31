@@ -1,0 +1,85 @@
+# Environment Module Requirements
+
+## 1. Class Requirements
+
+### 1.1 Environment Class
+Must implement Environment class with:
+- All attributes using Pint Quantity types:
+    - tension: Axial load along fastener
+    - shear: Shear load perpendicular to fastener
+    - bending: Bending moment on fastener
+    - min_temp: Minimum environmental temperature
+    - nom_temp: Nominal assembly temperature
+    - max_temp: Maximum environmental temperature
+    - preload_torque: Installation torque
+
+### 1.2 Input Validation
+Must implement validate() method that ensures:
+- All temperatures are above absolute zero
+- Preload torque is positive
+- All quantities have correct units:
+    - Forces in N or lbf
+    - Moments in N⋅m or lbf⋅ft
+    - Temperatures in K or °R
+    - Torques in N⋅m or lbf⋅ft
+
+### 1.3 Load Conversion
+Must implement set_force_from_6dof class method that:
+- Takes forces (Fx, Fy, Fz) and moments (Mx, My, Mz) as lists of Quantities
+- Accepts fastener_axis parameter ('x', 'y', or 'z')
+- Converts 6DOF loads into:
+    - Axial tension along fastener axis
+    - Combined shear perpendicular to axis
+    - Net bending moment on fastener
+- Returns new Environment instance
+
+## 2. Implementation Requirements
+
+### 2.1 Code Quality
+- Must use type hints for all methods and attributes
+- Must include comprehensive docstrings
+- Must follow PEP 8 style guidelines
+- Must use dataclass or similar for clean initialization
+
+### 2.2 Error Handling
+- Must raise ValueError for invalid inputs:
+    - Wrong unit types
+    - Invalid temperature values
+    - Invalid axis specification
+    - Missing required values
+- Must provide clear error messages
+
+### 2.3 Unit Safety
+- Must use Pint for all numerical values
+- Must validate unit compatibility in calculations
+- Must maintain unit consistency in all operations
+
+## 3. Test Requirements
+
+### 3.1 Test Coverage
+Must include tests for:
+- Initialization with valid inputs
+- All validation checks
+- 6DOF load conversion for each axis
+- Temperature boundary conditions
+- Unit conversion scenarios
+- Error conditions
+
+### 3.2 Test Implementation
+- No mocking allowed - use real objects
+- Must test with both metric and imperial units
+- Must verify unit safety
+- Must include edge cases
+- Must verify temperature validation
+- Must verify torque validation
+
+## 4. Integration Requirements
+
+### 4.1 External Dependencies
+- Must work with existing project unit configuration
+- Must be compatible with NASA5020Analysis class inputs
+- Must maintain separation from analysis logic
+
+### 4.2 Performance
+- Validation must occur on instantiation
+- Load conversion must be efficient for single-case analysis
