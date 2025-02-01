@@ -1,6 +1,6 @@
 # ScrewPy
 
-ScrewPy is a Python library for analyzing bolted joints and fastener assemblies according to NASA-STD-5020. It provides tools for calculating grip lengths, stack-up thicknesses, validating fastener assemblies, and performing comprehensive joint analysis.
+ScrewPy is a Python library for analyzing bolted joints and fastener assemblies according to NASA-STD-5020. It provides tools for validating fastener assemblies, and performing basic joint analysis.
 
 ## Key Features
 
@@ -12,8 +12,10 @@ ScrewPy is a Python library for analyzing bolted joints and fastener assemblies 
 
 ## Current Limitations
 - Limited to UNC, UNF, and metric thread types
-- Basic thermal analysis (linear properties only)
 - Single-fastener joints only
+
+## DISCLAIMER
+- screwPy has NOT been VALIDATED with an industrial use case. As such it may have bugs. Be sure to validate your results with appropriate hand calculations.
 
 ## Installation
 
